@@ -14,6 +14,7 @@ exports.new_hub = function() {
 	hub.frames = [];
 	hub.index = 0;
 	hub.canvas = document.getElementById("canvas");
+	hub.infodiv = document.getElementById("info");
 
 	return hub;
 };
@@ -85,7 +86,7 @@ let hub_props = {
 				continue;
 			}
 
-			if (fields[0] === "D_DONE")	{		// Engine finished sending frame
+			if (fields[0] === "D_DONE")	{					// Engine finished sending frame
 				frames.push(new_frame(width, height));
 				continue;
 			}
@@ -93,7 +94,7 @@ let hub_props = {
 			frames[frames.length - 1].parse(fields);
 		}
 
-		this.frames = frames;
+		this.frames = frames.slice(0, frames.length - 1);	// Delete last frame which wasn't used
 		this.index = 0;
 
 		this.draw();
@@ -117,6 +118,9 @@ let hub_props = {
 
 		let cell_size = Math.floor(Math.min(foo, bar));
 
+		ctx.fillStyle = "#333333ff";
+		ctx.fillRect(0, 0, frame.width * cell_size, frame.height * cell_size);
+
 		for (let x = 0; x < frame.width; x++) {
 			for (let y = 0; y < frame.height; y++) {
 				if (frame.map[x][y].type === "wood") {
@@ -134,7 +138,23 @@ let hub_props = {
 			}
 		}
 
+		this.infodiv.innerHTML = `Turn ${this.index}`;
+	},
 
-	}
+	forward(n) {
+		this.index += n;
+		if (this.index >= this.frames.length) {
+			this.index = this.frames.length - 1;
+		}
+		this.draw();
+	},
+
+	backward(n) {
+		this.index -= n;
+		if (this.index < 0) {
+			this.index = 0;
+		}
+		this.draw();
+	},
 
 };

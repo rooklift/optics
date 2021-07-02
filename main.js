@@ -133,6 +133,66 @@ function menu_build() {
 					type: "separator",
 				},
 				{
+					label: "Backward",
+					accelerator: "Up",
+					click: () => {
+						win.webContents.send("call", {
+							fn: "backward",
+							args: [1]
+						});
+					}
+				},
+				{
+					label: "Forward",
+					accelerator: "Down",
+					click: () => {
+						win.webContents.send("call", {
+							fn: "forward",
+							args: [1]
+						});
+					}
+				},
+				{
+					label: "Backward 10",
+					accelerator: "PageUp",
+					click: () => {
+						win.webContents.send("call", {
+							fn: "backward",
+							args: [10]
+						});
+					}
+				},
+				{
+					label: "Forward 10",
+					accelerator: "PageDown",
+					click: () => {
+						win.webContents.send("call", {
+							fn: "forward",
+							args: [10]
+						});
+					}
+				},
+				{
+					label: "Start",
+					accelerator: "Home",
+					click: () => {
+						win.webContents.send("call", {
+							fn: "backward",
+							args: [-999999]
+						});
+					}
+				},
+				{
+					label: "End",
+					accelerator: "End",
+					click: () => {
+						win.webContents.send("call", {
+							fn: "forward",
+							args: [999999]
+						});
+					}
+				},
+				{
 					label: "Quit",
 					accelerator: "CommandOrControl+Q",
 					role: "quit"
