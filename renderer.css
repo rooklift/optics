@@ -7,3 +7,18 @@ body {
 	padding: 0;
 	overflow: hidden;
 }
+
+#gridder {
+	display: grid;
+	grid-template-columns: min-content 1fr;
+	grid-template-areas:
+		"a b";
+}
+
+#canvas {
+	grid-area: a;
+}
+
+#info {
+	grid-area: b;
+}

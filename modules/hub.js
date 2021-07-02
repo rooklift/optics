@@ -13,6 +13,7 @@ exports.new_hub = function() {
 
 	hub.frames = [];
 	hub.index = 0;
+	hub.canvas = document.getElementById("canvas");
 
 	return hub;
 };
@@ -99,7 +100,41 @@ let hub_props = {
 	},
 
 	draw() {
-		// TODO
+
+		this.canvas.height = window.innerHeight;
+		this.canvas.width = this.canvas.height;
+
+		let frame = this.frames[this.index];
+
+		if (frame === undefined) {
+			return;
+		}
+
+		let ctx = this.canvas.getContext("2d");
+
+		let foo = canvas.width / frame.width;				// I couldn't think
+		let bar = canvas.height / frame.height;				// of a good name.
+
+		let cell_size = Math.floor(Math.min(foo, bar));
+
+		for (let x = 0; x < frame.width; x++) {
+			for (let y = 0; y < frame.height; y++) {
+				if (frame.map[x][y].type === "wood") {
+					ctx.fillStyle = "#33aa33ff";
+					ctx.fillRect(x * cell_size, y * cell_size, cell_size, cell_size);
+				}
+				if (frame.map[x][y].type === "coal") {
+					ctx.fillStyle = "#999999ff";
+					ctx.fillRect(x * cell_size, y * cell_size, cell_size, cell_size);
+				}
+				if (frame.map[x][y].type === "uranium") {
+					ctx.fillStyle = "#66ccccff";
+					ctx.fillRect(x * cell_size, y * cell_size, cell_size, cell_size);
+				}
+			}
+		}
+
+
 	}
 
 };
