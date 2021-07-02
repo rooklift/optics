@@ -70,6 +70,10 @@ let replay_props = {
 		return ret;
 	},
 
+	get_research(i, team) {
+		return this.stateful[i].teamStates[team].researchPoints;
+	},
+
 	get_team_ids() {
 		return Object.keys(this.stateful[0].teamStates).map((t) => { return parseInt(t, 10); });
 	},

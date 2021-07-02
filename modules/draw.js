@@ -90,11 +90,19 @@ function draw_info(replay, index, infodiv) {
 		lines.push(`<p class="team_${team}">Team ${team}</p>`);
 
 		lines.push(`<ul>`);
+
+		lines.push(`<li>Research: <span class="team_${team}">${replay.get_research(index, team)}</span></li>`);
+
+		lines.push(`<li>
+			Workers: <span class="team_${team}">${units.filter(u => u.team === team && u.type === 0).length}</span>,
+			Carts: <span class="team_${team}">${units.filter(u => u.team === team && u.type === 1).length}</span>
+		</li>`);
+
 		for (let city of cities.filter(c => c.team === team)) {
 			lines.push(`<li>
-				<span class="team_${team}">City ${city.id}</span>,
-				fuel: <span class="team_${team}">${city.fuel}</span>,
-				upkeep: <span class="team_${team}">${city.lk}</span>
+				City <span class="team_${team}">${city.id}</span>,
+				Fuel: <span class="team_${team}">${city.fuel}</span>,
+				Upkeep: <span class="team_${team}">${city.lk}</span>
 				</li>`
 			);
 		}
