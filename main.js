@@ -167,6 +167,9 @@ function menu_build() {
 					}
 				},
 				{
+					type: "separator",
+				},
+				{
 					label: "Backward 10",
 					accelerator: "PageUp",
 					click: () => {
@@ -187,7 +190,10 @@ function menu_build() {
 					}
 				},
 				{
-					label: "Start",
+					type: "separator",
+				},
+				{
+					label: "Go to start",
 					accelerator: "Home",
 					click: () => {
 						win.webContents.send("call", {
@@ -197,7 +203,7 @@ function menu_build() {
 					}
 				},
 				{
-					label: "End",
+					label: "Go to end",
 					accelerator: "End",
 					click: () => {
 						win.webContents.send("call", {
