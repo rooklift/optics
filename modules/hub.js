@@ -5,7 +5,6 @@ const path = require("path");
 const {ipcRenderer} = require("electron");
 
 const {defaults_classified} = require("./config_io");
-const new_buffer_line_reader = require("./buffer_line_reader");
 const add_replay_methods = require("./replay");
 const draw = require("./draw");
 
