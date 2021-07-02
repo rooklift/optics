@@ -94,7 +94,7 @@ let frame_props = {
 			let y = parseInt(fields[3], 10);
 			let amount = parseInt(fields[4], 10);
 
-			this.map[x][y].type = type;
+			this.map[x][y].type = amount > 0 ? type : "";
 			this.map[x][y].amount = amount;
 			return;
 		}
