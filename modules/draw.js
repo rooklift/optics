@@ -2,6 +2,7 @@
 
 const colours = ["#ffcc66ff", "#00ccffff"];
 const unit_types = ["Worker", "Cart"];
+const road_colours = ["#222222ff", "#333333ff", "#444444ff", "#555555ff", "#666666ff", "#777777ff", "#777777ff"];
 
 function draw(replay, index, canvas, infodiv, selection) {
 
@@ -24,6 +25,18 @@ function draw(replay, index, canvas, infodiv, selection) {
 	ctx.textAlign = "center";
 	ctx.textBaseline = "middle";
 	ctx.font = `${cell_size / 2.5}px Arial`;
+
+	// Roads...
+
+	for (let x = 0; x < width; x++) {
+		for (let y = 0; y < height; y++) {
+			let cell = replay.get_cell(index, x, y);
+			if (cell.road > 0) {
+				ctx.fillStyle = road_colours[Math.ceil(cell.road)];
+				ctx.fillRect(x * cell_size + cell_size / 4, y * cell_size + cell_size / 4, cell_size / 2, cell_size / 2);
+			}
+		}
+	}
 
 	// Draw crosshairs now so they're below the stuff...
 
