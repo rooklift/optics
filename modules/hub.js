@@ -123,6 +123,28 @@ let hub_props = {
 			}
 		}
 
+		// Houses...
+
+		for (let house of this.replay.get_houses(this.index)) {
+			ctx.fillStyle = colours[house.team];
+			ctx.fillRect(house.x * cell_size + 1, house.y * cell_size + 1, cell_size - 2, cell_size - 2);
+		}
+
+		// Doods...
+
+		for (let unit of this.replay.get_units(this.index)) {
+			ctx.fillStyle = colours[unit.team];
+			ctx.strokeStyle = "#000000ff";
+			let gx = unit.x * cell_size + (cell_size / 2);
+			let gy = unit.y * cell_size + (cell_size / 2);
+			ctx.beginPath();
+			ctx.arc(gx, gy, cell_size / 2 - 2, 0, 2 * Math.PI);
+			ctx.fill();
+			ctx.beginPath();
+			ctx.arc(gx, gy, cell_size / 2 - 2, 0, 2 * Math.PI);
+			ctx.stroke();
+		}
+
 		this.infodiv.innerHTML = `Turn ${this.index}`;
 	},
 
