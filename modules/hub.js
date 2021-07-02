@@ -123,6 +123,11 @@ let hub_props = {
 		this.draw();
 	},
 
+	escape() {
+		this.selection = null;
+		this.draw();
+	},
+
 	resize_checker() {
 		if (this.resize_time && performance.now() - this.resize_time > 200) {
 			this.resize_time = null;

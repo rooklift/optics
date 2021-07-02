@@ -130,7 +130,7 @@ function draw_info(replay, index, infodiv, selection) {
 		if (house) {
 			lines.push(`House of city <span class="team_${house.team}">${house.id}</span><br>`);
 		} else if (cell.type) {
-			lines.push(`Resource: ${cell.type}, amount: ${cell.amount}<br>`);
+			lines.push(`Resource: <span class="${cell.type}">${cell.type}</span> (${cell.amount})<br>`);
 		} else {
 			lines.push(`No resource<br>`);
 		}

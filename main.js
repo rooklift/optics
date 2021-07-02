@@ -212,6 +212,16 @@ function menu_build() {
 						});
 					}
 				},
+				{
+					type: "separator",
+				},
+				{
+					label: "Selection none",
+					accelerator: "Escape",
+					click: () => {
+						win.webContents.send("call", "escape");
+					}
+				},
 			]
 		}
 	];
