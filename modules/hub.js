@@ -1,11 +1,14 @@
 "use strict";
 
 const fs = require("fs");
+const path = require("path");
 const {ipcRenderer} = require("electron");
 
 const {defaults_classified} = require("./config_io");
 const new_buffer_line_reader = require("./buffer_line_reader");
 const new_frame = require("./frame");
+
+const colours = ["#ffcc66ff", "#00ccffff"];
 
 exports.new_hub = function() {
 
@@ -15,6 +18,8 @@ exports.new_hub = function() {
 	hub.index = 0;
 	hub.canvas = document.getElementById("canvas");
 	hub.infodiv = document.getElementById("info");
+
+	hub.resize_time = null;
 
 	return hub;
 };
@@ -97,13 +102,15 @@ let hub_props = {
 		this.frames = frames.slice(0, frames.length - 1);	// Delete last frame which wasn't used
 		this.index = 0;
 
+		ipcRenderer.send("set_title", path.basename(filepath));
+
 		this.draw();
 	},
 
 	draw() {
 
 		this.canvas.height = window.innerHeight;
-		this.canvas.width = this.canvas.height;
+		this.canvas.width = window.innerWidth - 300;
 
 		let frame = this.frames[this.index];
 
@@ -121,21 +128,45 @@ let hub_props = {
 		ctx.fillStyle = "#333333ff";
 		ctx.fillRect(0, 0, frame.width * cell_size, frame.height * cell_size);
 
+		// Resources...
+
 		for (let x = 0; x < frame.width; x++) {
 			for (let y = 0; y < frame.height; y++) {
 				if (frame.map[x][y].type === "wood") {
 					ctx.fillStyle = "#33aa33ff";
-					ctx.fillRect(x * cell_size, y * cell_size, cell_size, cell_size);
+					ctx.fillRect(x * cell_size + 1, y * cell_size + 1, cell_size - 2, cell_size - 2);
 				}
 				if (frame.map[x][y].type === "coal") {
 					ctx.fillStyle = "#999999ff";
-					ctx.fillRect(x * cell_size, y * cell_size, cell_size, cell_size);
+					ctx.fillRect(x * cell_size + 1, y * cell_size + 1, cell_size - 2, cell_size - 2);
 				}
 				if (frame.map[x][y].type === "uranium") {
 					ctx.fillStyle = "#66ccccff";
-					ctx.fillRect(x * cell_size, y * cell_size, cell_size, cell_size);
+					ctx.fillRect(x * cell_size + 1, y * cell_size + 1, cell_size - 2, cell_size - 2);
 				}
 			}
+		}
+
+		// Houses...
+
+		for (let house of frame.houses) {
+			ctx.fillStyle = colours[house.team];
+			ctx.fillRect(house.x * cell_size + 1, house.y * cell_size + 1, cell_size - 2, cell_size - 2);
+		}
+
+		// Doods...
+
+		for (let unit of frame.units) {
+			ctx.fillStyle = colours[unit.team];
+			ctx.strokeStyle = "#000000ff";
+			let gx = unit.x * cell_size + (cell_size / 2);
+			let gy = unit.y * cell_size + (cell_size / 2);
+			ctx.beginPath();
+			ctx.arc(gx, gy, cell_size / 2 - 2, 0, 2 * Math.PI);
+			ctx.fill();
+			ctx.beginPath();
+			ctx.arc(gx, gy, cell_size / 2 - 2, 0, 2 * Math.PI);
+			ctx.stroke();
 		}
 
 		this.infodiv.innerHTML = `Turn ${this.index}`;
@@ -155,6 +186,14 @@ let hub_props = {
 			this.index = 0;
 		}
 		this.draw();
+	},
+
+	resize_checker() {
+		if (this.resize_time && performance.now() - this.resize_time > 200) {
+			this.resize_time = null;
+			this.draw();
+		}
+		setTimeout(this.resize_checker.bind(this), 50);
 	},
 
 };

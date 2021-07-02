@@ -22,6 +22,11 @@ global.save_config = config_io.save;
 global.hub = require("./hub").new_hub();
 
 // ------------------------------------------------------------------------------------------------
+// Things that spin in a loop...
+
+hub.resize_checker();
+
+// ------------------------------------------------------------------------------------------------
 // Menu handlers...
 
 ipcRenderer.on("set", (event, msg) => {
@@ -50,3 +55,7 @@ ipcRenderer.on("call", (event, msg) => {
 window.addEventListener("error", (event) => {
 	alert("An uncaught exception happened in the renderer process. See the dev console for details. The app might now be in a bad state.");
 }, {once: true});
+
+window.addEventListener("resize", (event) => {
+	hub.resize_time = performance.now();
+});
