@@ -84,6 +84,12 @@ let replay_props = {
 	get_team_ids() {
 		return Object.keys(this.stateful[0].teamStates).map((t) => { return parseInt(t, 10); });
 	},
+
+	get_orders_for_unit(i, id) {
+		let list = this.allCommands[i];
+		list = list.filter(c => c.command.split(" ").includes(id)).map(c => c.command);
+		return list.join(", ");
+	}
 };
 
 
