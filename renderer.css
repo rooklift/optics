@@ -6,24 +6,16 @@ body {
 	margin: 0;
 	padding: 0;
 	overflow: hidden;
-}
-
-#gridder {
-	display: grid;
-	grid-template-columns: min-content 1fr;
-	grid-template-areas:
-		"a b";
+	font-size: 125%;
 }
 
 #canvas {
-	grid-area: a;
+	float: left;
+	margin: 0 1em 0 0;
 }
 
-#info {
-	grid-area: b;
-	margin: 1em 0 0 1em;
-	white-space: nowrap;
-	overflow: hidden;       /* prevents top <p> margin sticking up; also somehow stops list items from falling left if they could */
+p {
+	margin-top: 0;
 }
 
 .team_0 {
@@ -32,10 +24,4 @@ body {
 
 .team_1 {
 	color: #00ccffff;
-}
-
-ul {
-	padding: 0;             /* apparently this also removes the bullets */
-	margin-top: 0;
-	margin-bottom: 1em;
 }

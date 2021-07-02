@@ -5,7 +5,7 @@ const colours = ["#ffcc66ff", "#00ccffff"];
 function draw(replay, index, canvas, infodiv) {
 
 	canvas.height = window.innerHeight;
-	canvas.width = window.innerWidth - 300;
+	canvas.width = canvas.height;
 
 	if (!replay) {
 		return;
@@ -83,30 +83,23 @@ function draw_info(replay, index, infodiv) {
 
 	let lines = [];
 
-	lines.push(`<p>Turn ${index}</p>`);
+	lines.push(`<br>Turn ${index}<br>`);
 
 	for (let team of replay.get_team_ids()) {
 
-		lines.push(`<p class="team_${team}">Team ${team}</p>`);
+		lines.push(`<span class="team_${team}"><br>Team ${team}</span><br>`);
+		lines.push(`Research: <span class="team_${team}">${replay.get_research(index, team)}</span><br>`);
 
-		lines.push(`<ul>`);
-
-		lines.push(`<li>Research: <span class="team_${team}">${replay.get_research(index, team)}</span></li>`);
-
-		lines.push(`<li>
-			Workers: <span class="team_${team}">${units.filter(u => u.team === team && u.type === 0).length}</span>,
-			Carts: <span class="team_${team}">${units.filter(u => u.team === team && u.type === 1).length}</span>
-		</li>`);
+		lines.push(`Workers: <span class="team_${team}">${units.filter(u => u.team === team && u.type === 0).length}</span>,
+					Carts: <span class="team_${team}">${units.filter(u => u.team === team && u.type === 1).length}</span><br>`
+		);
 
 		for (let city of cities.filter(c => c.team === team)) {
-			lines.push(`<li>
-				City <span class="team_${team}">${city.id}</span>,
-				Fuel: <span class="team_${team}">${city.fuel}</span>,
-				Upkeep: <span class="team_${team}">${city.lk}</span>
-				</li>`
+			lines.push(`City <span class="team_${team}">${city.id}</span>,
+						Fuel: <span class="team_${team}">${city.fuel}</span>,
+						Upkeep: <span class="team_${team}">${city.lk}</span><br>`
 			);
 		}
-		lines.push(`</ul>`);
 
 	}
 
