@@ -98,4 +98,8 @@ let hub_props = {
 		this.draw();
 	},
 
+	draw() {
+		// TODO
+	}
+
 };
