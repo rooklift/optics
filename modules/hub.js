@@ -7,8 +7,7 @@ const {ipcRenderer} = require("electron");
 const {defaults_classified} = require("./config_io");
 const new_buffer_line_reader = require("./buffer_line_reader");
 const add_replay_methods = require("./replay");
-
-const colours = ["#ffcc66ff", "#00ccffff"];
+const draw = require("./draw");
 
 exports.new_hub = function() {
 
@@ -77,75 +76,7 @@ let hub_props = {
 	},
 
 	draw() {
-
-		this.canvas.height = window.innerHeight;
-		this.canvas.width = window.innerWidth - 300;
-
-		if (!this.replay) {
-			return;
-		}
-
-		let height = this.replay.height();
-		let width = this.replay.width();
-
-		let ctx = this.canvas.getContext("2d");
-
-		let foo = canvas.width / width;					// I couldn't think
-		let bar = canvas.height / height;				// of a good name.
-
-		let cell_size = Math.floor(Math.min(foo, bar));
-
-		ctx.fillStyle = "#333333ff";
-		ctx.fillRect(0, 0, width * cell_size, height * cell_size);
-
-		// Resources...
-
-		for (let x = 0; x < width; x++) {
-
-			for (let y = 0; y < height; y++) {
-
-				let cell = this.replay.get_cell(this.index, x, y);
-
-				if (cell.resource) {
-					if (cell.resource.type === "wood" && cell.resource.amount > 0) {
-						ctx.fillStyle = "#33aa33ff";
-						ctx.fillRect(x * cell_size + 1, y * cell_size + 1, cell_size - 2, cell_size - 2);
-					}
-					if (cell.resource.type === "coal" && cell.resource.amount > 0) {
-						ctx.fillStyle = "#999999ff";
-						ctx.fillRect(x * cell_size + 1, y * cell_size + 1, cell_size - 2, cell_size - 2);
-					}
-					if (cell.resource.type === "uranium" && cell.resource.amount > 0) {
-						ctx.fillStyle = "#66ccccff";
-						ctx.fillRect(x * cell_size + 1, y * cell_size + 1, cell_size - 2, cell_size - 2);
-					}
-				}
-			}
-		}
-
-		// Houses...
-
-		for (let house of this.replay.get_houses(this.index)) {
-			ctx.fillStyle = colours[house.team];
-			ctx.fillRect(house.x * cell_size + 1, house.y * cell_size + 1, cell_size - 2, cell_size - 2);
-		}
-
-		// Doods...
-
-		for (let unit of this.replay.get_units(this.index)) {
-			ctx.fillStyle = colours[unit.team];
-			ctx.strokeStyle = "#000000ff";
-			let gx = unit.x * cell_size + (cell_size / 2);
-			let gy = unit.y * cell_size + (cell_size / 2);
-			ctx.beginPath();
-			ctx.arc(gx, gy, cell_size / 2 - 2, 0, 2 * Math.PI);
-			ctx.fill();
-			ctx.beginPath();
-			ctx.arc(gx, gy, cell_size / 2 - 2, 0, 2 * Math.PI);
-			ctx.stroke();
-		}
-
-		this.infodiv.innerHTML = `Turn ${this.index}`;
+		draw(this.replay, this.index, this.canvas, this.infodiv);
 	},
 
 	backward(n) {
