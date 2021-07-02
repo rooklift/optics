@@ -21,8 +21,8 @@ function draw(replay, index, canvas, infodiv) {
 
 	let cell_size = Math.floor(Math.min(foo, bar));
 
-	ctx.fillStyle = "#333333ff";
-	ctx.fillRect(0, 0, width * cell_size, height * cell_size);
+	// ctx.fillStyle = "#333333ff";
+	// ctx.fillRect(0, 0, width * cell_size, height * cell_size);
 
 	// Resources...
 
@@ -64,10 +64,10 @@ function draw(replay, index, canvas, infodiv) {
 		let gx = unit.x * cell_size + (cell_size / 2);
 		let gy = unit.y * cell_size + (cell_size / 2);
 		ctx.beginPath();
-		ctx.arc(gx, gy, cell_size / 2 - 2, 0, 2 * Math.PI);
+		ctx.arc(gx, gy, cell_size / 3, 0, 2 * Math.PI);
 		ctx.fill();
 		ctx.beginPath();
-		ctx.arc(gx, gy, cell_size / 2 - 2, 0, 2 * Math.PI);
+		ctx.arc(gx, gy, cell_size / 3, 0, 2 * Math.PI);
 		ctx.stroke();
 	}
 
