@@ -20,6 +20,9 @@ exports.new_hub = function() {
 
 	hub.resize_time = null;
 
+	hub.selection_type = null;
+	hub.selection_id = null;
+
 	return hub;
 };
 

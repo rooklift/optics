@@ -21,8 +21,8 @@ function draw(replay, index, canvas, infodiv) {
 
 	let cell_size = Math.floor(Math.min(foo, bar));
 
-	// ctx.fillStyle = "#333333ff";
-	// ctx.fillRect(0, 0, width * cell_size, height * cell_size);
+	ctx.fillStyle = "#222222ff";
+	ctx.fillRect(0, 0, width * cell_size, height * cell_size);
 
 	// Resources...
 
@@ -34,16 +34,16 @@ function draw(replay, index, canvas, infodiv) {
 
 			if (cell.resource) {
 				if (cell.resource.type === "wood" && cell.resource.amount > 0) {
-					ctx.fillStyle = "#33aa33ff";
-					ctx.fillRect(x * cell_size + 1, y * cell_size + 1, cell_size - 2, cell_size - 2);
+					ctx.fillStyle = "#64b864ff";
+					ctx.fillRect(x * cell_size + 2, y * cell_size + 2, cell_size - 4, cell_size - 4);
 				}
 				if (cell.resource.type === "coal" && cell.resource.amount > 0) {
-					ctx.fillStyle = "#999999ff";
-					ctx.fillRect(x * cell_size + 1, y * cell_size + 1, cell_size - 2, cell_size - 2);
+					ctx.fillStyle = "#707070ff";
+					ctx.fillRect(x * cell_size + 2, y * cell_size + 2, cell_size - 4, cell_size - 4);
 				}
 				if (cell.resource.type === "uranium" && cell.resource.amount > 0) {
-					ctx.fillStyle = "#66ccccff";
-					ctx.fillRect(x * cell_size + 1, y * cell_size + 1, cell_size - 2, cell_size - 2);
+					ctx.fillStyle = "#cc66ccff";
+					ctx.fillRect(x * cell_size + 2, y * cell_size + 2, cell_size - 4, cell_size - 4);
 				}
 			}
 		}
@@ -53,7 +53,17 @@ function draw(replay, index, canvas, infodiv) {
 
 	for (let house of replay.get_houses(index)) {
 		ctx.fillStyle = colours[house.team];
-		ctx.fillRect(house.x * cell_size + 1, house.y * cell_size + 1, cell_size - 2, cell_size - 2);
+
+		ctx.beginPath();
+		ctx.moveTo(house.x * cell_size + cell_size / 2, house.y * cell_size + 2)
+		ctx.lineTo(house.x * cell_size + cell_size - 2, house.y * cell_size + cell_size / 3);
+		ctx.lineTo(house.x * cell_size + cell_size - 2, house.y * cell_size + cell_size - 2);
+		ctx.lineTo(house.x * cell_size + 2, house.y * cell_size + cell_size - 2);
+		ctx.lineTo(house.x * cell_size + 2, house.y * cell_size + cell_size / 3);
+		ctx.closePath();
+		ctx.fill();
+
+		// ctx.fillRect(house.x * cell_size + 1, house.y * cell_size + 1, cell_size - 2, cell_size - 2);
 	}
 
 	// Doods...
@@ -80,6 +90,7 @@ function draw_info(replay, index, infodiv) {
 
 	let cities = replay.get_cities(index);
 	let units = replay.get_units(index);
+	let houses = replay.get_houses(index);
 
 	let lines = [];
 
@@ -87,7 +98,9 @@ function draw_info(replay, index, infodiv) {
 
 	for (let team of replay.get_team_ids()) {
 
-		lines.push(`<span class="team_${team}"><br>Team ${team}</span><br>`);
+		let my_houses = houses.filter(h => h.team === team);
+
+		lines.push(`<span class="team_${team}"><br>Team ${team}</span>, houses: <span class="team_${team}">${my_houses.length}</span><br>`);
 		lines.push(`Research: <span class="team_${team}">${replay.get_research(index, team)}</span><br>`);
 
 		lines.push(`Workers: <span class="team_${team}">${units.filter(u => u.team === team && u.type === 0).length}</span>,

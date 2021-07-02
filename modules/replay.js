@@ -78,6 +78,9 @@ let replay_props = {
 		return Object.keys(this.stateful[0].teamStates).map((t) => { return parseInt(t, 10); });
 	},
 
+	get_unit_by_id(i, id) {
+		return this.get_units(i).filter(u => u.id === id)[0];		// Possibly undefined
+	},
 };
 
 
