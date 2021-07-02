@@ -66,3 +66,24 @@ document.addEventListener("wheel", (event) => {
 		if (event.deltaY > 0) hub.forward(1);
 	}
 });
+
+window.addEventListener("dragenter", (event) => {		// Necessary to prevent brief flashes of "not allowed" icon.
+	event.preventDefault();
+});
+
+window.addEventListener("dragover", (event) => {		// Necessary to prevent always having the "not allowed" icon.
+	event.preventDefault();
+});
+
+window.addEventListener("drop", (event) => {
+	event.preventDefault();
+	let files = [];
+	if (event.dataTransfer && event.dataTransfer.files) {
+		for (let file of event.dataTransfer.files) {
+			if (file.path) {
+				hub.load_stateful_replay(file.path);
+				break;
+			}
+		}
+	}
+});
