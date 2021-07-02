@@ -137,6 +137,16 @@ function menu_build() {
 					type: "separator",
 				},
 				{
+					label: "Quit",
+					accelerator: "CommandOrControl+Q",
+					role: "quit"
+				},
+			]
+		},
+		{
+			label: "View",
+			submenu: [
+				{
 					label: "Backward",
 					accelerator: "Up",
 					click: () => {
@@ -182,7 +192,7 @@ function menu_build() {
 					click: () => {
 						win.webContents.send("call", {
 							fn: "backward",
-							args: [-999999]
+							args: [999999]
 						});
 					}
 				},
@@ -196,13 +206,8 @@ function menu_build() {
 						});
 					}
 				},
-				{
-					label: "Quit",
-					accelerator: "CommandOrControl+Q",
-					role: "quit"
-				},
 			]
-		},
+		}
 	];
 
 	return electron.Menu.buildFromTemplate(template);

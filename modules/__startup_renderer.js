@@ -59,3 +59,10 @@ window.addEventListener("error", (event) => {
 window.addEventListener("resize", (event) => {
 	hub.resize_time = performance.now();
 });
+
+document.addEventListener("wheel", (event) => {
+	if (event.deltaY) {
+		if (event.deltaY < 0) hub.backward(1);
+		if (event.deltaY > 0) hub.forward(1);
+	}
+});

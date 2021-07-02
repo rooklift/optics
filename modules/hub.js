@@ -172,18 +172,18 @@ let hub_props = {
 		this.infodiv.innerHTML = `Turn ${this.index}`;
 	},
 
-	forward(n) {
-		this.index += n;
-		if (this.index >= this.frames.length) {
-			this.index = this.frames.length - 1;
-		}
-		this.draw();
-	},
-
 	backward(n) {
 		this.index -= n;
 		if (this.index < 0) {
 			this.index = 0;
+		}
+		this.draw();
+	},
+
+	forward(n) {
+		this.index += n;
+		if (this.index >= this.frames.length) {
+			this.index = this.frames.length - 1;
 		}
 		this.draw();
 	},
