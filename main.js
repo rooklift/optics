@@ -134,18 +134,6 @@ function menu_build() {
 					}
 				},
 				{
-					label: "Open bot log...",
-					click: () => {
-						let files = open_dialog();
-						if (Array.isArray(files) && files.length > 0) {
-							win.webContents.send("call", {
-								fn: "load_log",
-								args: [files[0]]
-							});
-						}
-					}
-				},
-				{
 					type: "separator",
 				},
 				{
