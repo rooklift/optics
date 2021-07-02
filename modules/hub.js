@@ -43,7 +43,7 @@ let hub_props = {
 		ipcRenderer.send("terminate");					// send "terminate". Not sure about results if that wasn't so.
 	},
 
-	load: function(filepath) {
+	load_log: function(filepath) {
 
 		if (filepath === __dirname || filepath === ".") {		// Can happen when extra args are passed to main process. Silently return.
 			return;
@@ -105,6 +105,23 @@ let hub_props = {
 		ipcRenderer.send("set_title", path.basename(filepath));
 
 		this.draw();
+	},
+
+	load_stateful_replay(filepath) {
+
+		if (filepath === __dirname || filepath === ".") {		// Can happen when extra args are passed to main process. Silently return.
+			return;
+		}
+		if (fs.existsSync(filepath) === false) {				// Can happen when extra args are passed to main process. Silently return.
+			return;
+		}
+
+		let buf = fs.readFileSync(filepath);
+
+		let o = JSON.parse(buf);
+
+		console.log(o);
+
 	},
 
 	draw() {

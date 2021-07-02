@@ -121,13 +121,25 @@ function menu_build() {
 					type: "separator",
 				},
 				{
-					label: "Open log...",
+					label: "Open stateful replay...",
 					accelerator: "CommandOrControl+O",
 					click: () => {
 						let files = open_dialog();
 						if (Array.isArray(files) && files.length > 0) {
 							win.webContents.send("call", {
-								fn: "load",
+								fn: "load_stateful_replay",
+								args: [files[0]]
+							});
+						}
+					}
+				},
+				{
+					label: "Open bot log...",
+					click: () => {
+						let files = open_dialog();
+						if (Array.isArray(files) && files.length > 0) {
+							win.webContents.send("call", {
+								fn: "load_log",
 								args: [files[0]]
 							});
 						}
