@@ -71,9 +71,39 @@ function draw(replay, index, canvas, infodiv) {
 		ctx.stroke();
 	}
 
-	infodiv.innerHTML = `Turn ${index}`;
+	// Info...
+
+	draw_info(replay, index, infodiv);
 }
 
+function draw_info(replay, index, infodiv) {
+
+	let cities = replay.get_cities(index);
+	let units = replay.get_units(index);
+
+	let lines = [];
+
+	lines.push(`<p>Turn ${index}</p>`);
+
+	for (let team of replay.get_team_ids()) {
+
+		lines.push(`<p class="team_${team}">Team ${team}</p>`);
+
+		lines.push(`<ul>`);
+		for (let city of cities.filter(c => c.team === team)) {
+			lines.push(`<li>
+				<span class="team_${team}">City ${city.id}</span>,
+				fuel: <span class="team_${team}">${city.fuel}</span>,
+				upkeep: <span class="team_${team}">${city.lk}</span>
+				</li>`
+			);
+		}
+		lines.push(`</ul>`);
+
+	}
+
+	infodiv.innerHTML = lines.join("\n");
+}
 
 
 module.exports = draw;

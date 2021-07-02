@@ -57,6 +57,23 @@ let replay_props = {
 		return ret;
 	},
 
+	get_cities(i) {
+		let ret = [];
+		for (let city of Object.values(this.stateful[i].cities)) {
+			ret.push({
+				team: city.team,
+				id: city.id,
+				fuel: city.fuel,
+				lk: city.lightupkeep
+			});
+		}
+		return ret;
+	},
+
+	get_team_ids() {
+		return Object.keys(this.stateful[0].teamStates).map((t) => { return parseInt(t, 10); });
+	},
+
 };
 
 

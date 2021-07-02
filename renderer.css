@@ -22,5 +22,20 @@ body {
 #info {
 	grid-area: b;
 	margin: 1em 0 0 1em;
+	white-space: nowrap;
+	overflow: hidden;       /* prevents top <p> margin sticking up; also somehow stops list items from falling left if they could */
 }
 
+.team_0 {
+	color: #ffcc66ff;
+}
+
+.team_1 {
+	color: #00ccffff;
+}
+
+ul {
+	padding: 0;             /* apparently this also removes the bullets */
+	margin-top: 0;
+	margin-bottom: 1em;
+}
