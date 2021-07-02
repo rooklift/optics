@@ -15,7 +15,14 @@ let replay_props = {
 	},
 
 	get_cell(i, x, y) {
-		return this.stateful[i].map[y][x];
+
+		let c = this.stateful[i].map[y][x];
+
+		let ret = {x, y};
+		ret.road = c.road ? c.road : 0;
+		ret.type = (c.resource && c.resource.amount > 0) ? c.resource.type : "";
+		ret.amount = (c.resource && c.resource.amount > 0) ? c.resource.amount : 0;
+		return ret;
 	},
 
 	get_units(i) {
@@ -76,10 +83,6 @@ let replay_props = {
 
 	get_team_ids() {
 		return Object.keys(this.stateful[0].teamStates).map((t) => { return parseInt(t, 10); });
-	},
-
-	get_unit_by_id(i, id) {
-		return this.get_units(i).filter(u => u.id === id)[0];		// Possibly undefined
 	},
 };
 

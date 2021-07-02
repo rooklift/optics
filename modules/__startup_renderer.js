@@ -87,3 +87,8 @@ window.addEventListener("drop", (event) => {
 		}
 	}
 });
+
+document.getElementById("canvas").addEventListener("mousedown", (event) => {
+	event.preventDefault();
+	hub.click(event);
+});

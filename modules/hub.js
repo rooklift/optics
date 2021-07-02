@@ -6,7 +6,7 @@ const {ipcRenderer} = require("electron");
 
 const {defaults_classified} = require("./config_io");
 const add_replay_methods = require("./replay");
-const draw = require("./draw");
+const drawtools = require("./draw");
 
 exports.new_hub = function() {
 
@@ -19,8 +19,7 @@ exports.new_hub = function() {
 
 	hub.resize_time = null;
 
-	hub.selection_type = null;
-	hub.selection_id = null;
+	hub.selection = null;
 
 	return hub;
 };
@@ -69,8 +68,9 @@ let hub_props = {
 		}
 
 		ipcRenderer.send("set_title", path.basename(filepath));
-		this.index = 0;
 		this.replay = o;
+		this.index = 0;
+		this.selection = null;
 		add_replay_methods(this.replay);
 
 		this.draw();
@@ -78,7 +78,7 @@ let hub_props = {
 	},
 
 	draw() {
-		draw(this.replay, this.index, this.canvas, this.infodiv);
+		drawtools.draw(this.replay, this.index, this.canvas, this.infodiv, this.selection);
 	},
 
 	backward(n) {
@@ -97,6 +97,29 @@ let hub_props = {
 				this.index = this.replay.stateful.length - 1;
 			}
 		}
+		this.draw();
+	},
+
+	click(event) {
+
+		if (!this.replay) {
+			return;
+		}
+
+		let map_width = this.replay.width();
+		let map_height = this.replay.height();
+
+		let cell_size = drawtools.calculate_cell_size(this.canvas, map_width, map_height);
+
+		let x = Math.floor(event.offsetX / cell_size);
+		let y = Math.floor(event.offsetY / cell_size);
+
+		if (x < 0 || y < 0 || x >= map_width || y >= map_height) {
+			return;
+		}
+
+		this.selection = [x, y];
+
 		this.draw();
 	},
 

@@ -1,8 +1,9 @@
 "use strict";
 
 const colours = ["#ffcc66ff", "#00ccffff"];
+const unit_types = ["worker", "cart"];
 
-function draw(replay, index, canvas, infodiv) {
+function draw(replay, index, canvas, infodiv, selection) {
 
 	canvas.height = window.innerHeight;
 	canvas.width = canvas.height;
@@ -11,16 +12,12 @@ function draw(replay, index, canvas, infodiv) {
 		return;
 	}
 
-	let height = replay.height();
 	let width = replay.width();
+	let height = replay.height();
+
+	let cell_size = calculate_cell_size(canvas, width, height);
 
 	let ctx = canvas.getContext("2d");
-
-	let foo = canvas.width / width;					// I couldn't think
-	let bar = canvas.height / height;				// of a good name.
-
-	let cell_size = Math.floor(Math.min(foo, bar));
-
 	ctx.fillStyle = "#222222ff";
 	ctx.fillRect(0, 0, width * cell_size, height * cell_size);
 
@@ -32,19 +29,17 @@ function draw(replay, index, canvas, infodiv) {
 
 			let cell = replay.get_cell(index, x, y);
 
-			if (cell.resource) {
-				if (cell.resource.type === "wood" && cell.resource.amount > 0) {
-					ctx.fillStyle = "#64b864ff";
-					ctx.fillRect(x * cell_size + 2, y * cell_size + 2, cell_size - 4, cell_size - 4);
-				}
-				if (cell.resource.type === "coal" && cell.resource.amount > 0) {
-					ctx.fillStyle = "#707070ff";
-					ctx.fillRect(x * cell_size + 2, y * cell_size + 2, cell_size - 4, cell_size - 4);
-				}
-				if (cell.resource.type === "uranium" && cell.resource.amount > 0) {
-					ctx.fillStyle = "#cc66ccff";
-					ctx.fillRect(x * cell_size + 2, y * cell_size + 2, cell_size - 4, cell_size - 4);
-				}
+			if (cell.type === "wood" && cell.amount > 0) {
+				ctx.fillStyle = "#64b864ff";
+				ctx.fillRect(x * cell_size + 2, y * cell_size + 2, cell_size - 4, cell_size - 4);
+			}
+			if (cell.type === "coal" && cell.amount > 0) {
+				ctx.fillStyle = "#707070ff";
+				ctx.fillRect(x * cell_size + 2, y * cell_size + 2, cell_size - 4, cell_size - 4);
+			}
+			if (cell.type === "uranium" && cell.amount > 0) {
+				ctx.fillStyle = "#cc66ccff";
+				ctx.fillRect(x * cell_size + 2, y * cell_size + 2, cell_size - 4, cell_size - 4);
 			}
 		}
 	}
@@ -83,10 +78,18 @@ function draw(replay, index, canvas, infodiv) {
 
 	// Info...
 
-	draw_info(replay, index, infodiv);
+	draw_info(replay, index, infodiv, selection);
 }
 
-function draw_info(replay, index, infodiv) {
+function calculate_cell_size(canvas, map_width, map_height) {
+
+	let foo = canvas.width / map_width;
+	let bar = canvas.height / map_height;
+
+	return Math.floor(Math.min(foo, bar));
+}
+
+function draw_info(replay, index, infodiv, selection) {
 
 	let cities = replay.get_cities(index);
 	let units = replay.get_units(index);
@@ -116,8 +119,32 @@ function draw_info(replay, index, infodiv) {
 
 	}
 
+	lines.push(`<br>Selection: [${selection ? selection[0].toString() + ", " + selection[1].toString() : "none"}]<br>`);
+
+	if (selection) {
+
+		let cell = replay.get_cell(index, selection[0], selection[1]);
+
+		let house = replay.get_houses(index).filter(h => h.x === selection[0] && h.y === selection[1])[0];
+
+		if (house) {
+			lines.push(`House of city <span class="team_${house.team}">${house.id}</span><br>`);
+		} else if (cell.type) {
+			lines.push(`Resource: ${cell.type}, amount: ${cell.amount}<br>`);
+		} else {
+			lines.push(`No resource<br>`);
+		}
+
+		let units = replay.get_units(index).filter(u => u.x === selection[0] && u.y === selection[1]);
+
+		for (let unit of units) {
+			lines.push(`Unit <span class="team_${unit.team}">${unit.id}</span> (${unit_types[unit.type]})<br>`);
+		}
+	}
+
 	infodiv.innerHTML = lines.join("\n");
 }
 
 
-module.exports = draw;
+
+module.exports = {draw, calculate_cell_size, draw_info};
