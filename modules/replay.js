@@ -38,18 +38,18 @@ let replay_props = {
 
 			for (let unit_id of Object.keys(this.stateful[i].teamStates[team_string].units)) {
 
-				let foo = this.stateful[i].teamStates[team_string].units[unit_id];
+				let unit = this.stateful[i].teamStates[team_string].units[unit_id];
 
 				ret.push({
 					team: team,
 					id: unit_id,
-					type: foo.type,
-					cd: foo.cooldown,
-					x: foo.x,
-					y: foo.y,
-					wood: foo.cargo.wood,
-					coal: foo.cargo.coal,
-					uranium: foo.cargo.uranium
+					type: unit.type,
+					cd: unit.cooldown,
+					x: unit.x,
+					y: unit.y,
+					wood: unit.cargo.wood,
+					coal: unit.cargo.coal,
+					uranium: unit.cargo.uranium
 				});
 			}
 		}
@@ -61,7 +61,7 @@ let replay_props = {
 		let ret = [];
 		for (let city of Object.values(this.stateful[i].cities)) {
 			for (let house of city.cityCells) {
-				ret.push({x: house.x, y: house.y, id: city.id, team: city.team});
+				ret.push({x: house.x, y: house.y, cd: house.cooldown, id: city.id, team: city.team});
 			}
 		}
 		return ret;
@@ -90,10 +90,19 @@ let replay_props = {
 
 	get_orders_for_unit(i, id) {
 		let list = this.allCommands[i];
-		if (list === undefined) {			// e.g. for very last turn.
+		if (list === undefined) {
 			return "";
 		}
-		list = list.filter(c => c.command.split(" ").includes(id)).map(c => c.command);
+		list = list.filter(c => command_is_for_unit(c.command, id)).map(c => c.command);
+		return list.join(", ");
+	},
+
+	get_orders_for_house(i, x, y) {
+		let list = this.allCommands[i];
+		if (list === undefined) {
+			return "";
+		}
+		list = list.filter(c => command_is_for_house(c.command, x, y)).map(c => c.command);
 		return list.join(", ");
 	},
 
@@ -110,6 +119,30 @@ let replay_props = {
 	},
 
 };
+
+// ------------------------------------------------------------------------------------------------
+
+function command_is_for_unit(s, id) {		// given some command, is it for the unit with this id?
+
+	let fields = s.trim().split(" ").filter(z => z !== "");
+
+	if (["m", "bcity", "p", "t"].includes(fields[0])) {
+		return fields[1] === id;
+	}
+
+	return false;
+}
+
+function command_is_for_house(s, x, y) {	// given some command, is it for the house at [x, y] ?
+
+	let fields = s.trim().split(" ").filter(z => z !== "");
+
+	if (["r", "bw", "bv"].includes(fields[0])) {
+		return fields[1] === x.toString() && fields[2] === y.toString();
+	}
+
+	return false;
+}
 
 
 

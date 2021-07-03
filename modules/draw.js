@@ -157,6 +157,8 @@ function draw_info(replay, index, infodiv, selection) {
 
 	lines.push(`<br>Turn ${index} ${is_night(index) ? "(night)" : "(day)"}<br>`);
 
+	// Teams.......................................................................................
+
 	for (let team of replay.get_team_ids()) {
 
 		let my_houses = houses.filter(h => h.team === team);
@@ -176,6 +178,8 @@ function draw_info(replay, index, infodiv, selection) {
 		}
 
 	}
+
+	// Selection...................................................................................
 
 	let selection_x = null;
 	let selection_y = null;
@@ -199,18 +203,28 @@ function draw_info(replay, index, infodiv, selection) {
 		}
 	}
 
+	// Cell at selection, and its contents.........................................................
+
 	if (typeof selection_x === "number" && typeof selection_y === "number") {
 
 		let cell = replay.get_cell(index, selection_x, selection_y);
 		let house = replay.get_house_at(index, selection_x, selection_y);
 
 		let cell_line = `<br>Cell [${selection_x}, ${selection_y}]`;
+
 		if (house) {
-			cell_line += ` - <span class="team_${house.team}">city ${house.id}</span>`;
+
+			cell_line += ` - <span class="team_${house.team}">house (${house.id})</span>,
+							cd: <span class="team_${house.team}">${house.cd}</span>,
+							cmd: <span class="team_${house.team}">${replay.get_orders_for_house(index, house.x, house.y)}</span>`;
+
 		} else if (cell.type) {
+
 			cell_line += ` - <span class="${cell.type}">${cell.type}</span> (${cell.amount})`;
+
 		}
-		cell_line += "<br>";
+
+		cell_line += "<br><br>";
 		lines.push(cell_line);
 
 		for (let unit of units.filter(u => u.x === selection_x && u.y === selection_y)) {
@@ -224,6 +238,7 @@ function draw_info(replay, index, infodiv, selection) {
 						cmd: <span class="team_${unit.team}">${replay.get_orders_for_unit(index, unit.id)}</span><br>`
 			);
 		}
+
 	}
 
 	infodiv.innerHTML = lines.join("\n");
