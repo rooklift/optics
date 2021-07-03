@@ -142,7 +142,7 @@ function draw_info(replay, index, infodiv, selection) {
 
 	let lines = [];
 
-	lines.push(`<br>Turn ${index}<br>`);
+	lines.push(`<br>Turn ${index} ${is_night(index) ? "(night)" : "(day)"}<br>`);
 
 	for (let team of replay.get_team_ids()) {
 
@@ -238,6 +238,10 @@ function get_xy_from_selection(replay, index, selection) {
 	}
 
 	throw "bad object";
+}
+
+function is_night(index) {
+	return (index % 40) > 29;
 }
 
 function draw_selection_crosshairs(replay, index, canvas, selection, cell_size) {
