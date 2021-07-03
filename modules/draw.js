@@ -94,44 +94,18 @@ function draw(replay, index, canvas, infodiv, selection) {
 			stacks[`${unit.x},${unit.y}`] = [unit];
 		}
 
-		let gx = unit.x * cell_size + (cell_size / 2);
-		let gy = unit.y * cell_size + (cell_size / 2);
-
-		ctx.fillStyle = "#000000";
-		ctx.beginPath();
-		ctx.arc(gx, gy, cell_size / 3, 0, 2 * Math.PI);
-		ctx.fill();
-
-		ctx.fillStyle = colours[unit.team] + float_to_hex_ff((unit.wood + unit.coal + unit.uranium) / 100);
-		ctx.beginPath();
-		ctx.arc(gx, gy, cell_size / 3, 0, 2 * Math.PI);
-		ctx.fill();
-
-		ctx.strokeStyle = colours[unit.team];
-		ctx.lineWidth = 2;
-		ctx.beginPath();
-		ctx.arc(gx, gy, cell_size / 3, 0, 2 * Math.PI);
-		ctx.stroke();
 	}
 
 	for (let stack of Object.values(stacks)) {
-
-		let unit = stack[0];
-		let gx = unit.x * cell_size + (cell_size / 2);
-		let gy = unit.y * cell_size + (cell_size / 2) + 1;
-
 		if (stack.length === 1) {
-			if (unit.type === 0 && unit.wood + unit.coal + unit.uranium > 50) {
-				ctx.fillStyle = "#000000";
+			if (stack[0].type === 0) {
+				draw_worker(canvas, cell_size, stack[0]);
 			} else {
-				ctx.fillStyle = colours[unit.team];
+				draw_cart(canvas, cell_size, stack[0]);
 			}
-			ctx.fillText(unit.id.slice(2).toString(), gx, gy);
 		} else {
-			ctx.fillStyle = colours[unit.team];
-			ctx.fillText("+", gx, gy);
+			draw_stack(canvas, cell_size, stack);
 		}
-
 	}
 
 	// Info...
@@ -279,6 +253,65 @@ function float_to_hex_ff(n) {
 	let s = n.toString(16);
 	if (s.length === 1) s = "0" + s;
 	return s;
+}
+
+function draw_worker(canvas, cell_size, unit) {
+
+	let ctx = canvas.getContext("2d");
+
+	let gx = unit.x * cell_size + (cell_size / 2);
+	let gy = unit.y * cell_size + (cell_size / 2);
+
+	ctx.fillStyle = "#000000";
+	ctx.beginPath();
+	ctx.arc(gx, gy, cell_size / 3, 0, 2 * Math.PI);
+	ctx.fill();
+
+	ctx.fillStyle = colours[unit.team] + float_to_hex_ff((unit.wood + unit.coal + unit.uranium) / 100);
+	ctx.beginPath();
+	ctx.arc(gx, gy, cell_size / 3, 0, 2 * Math.PI);
+	ctx.fill();
+
+	ctx.strokeStyle = colours[unit.team];
+	ctx.lineWidth = 2;
+	ctx.beginPath();
+	ctx.arc(gx, gy, cell_size / 3, 0, 2 * Math.PI);
+	ctx.stroke();
+
+	if (unit.wood + unit.coal + unit.uranium > 50) {
+		ctx.fillStyle = "#000000";
+	} else {
+		ctx.fillStyle = colours[unit.team];
+	}
+	ctx.fillText(unit.id.slice(2).toString(), gx, gy + 1);
+}
+
+function draw_cart(canvas, cell_size, unit) {
+	draw_worker(canvas, cell_size, unit);			// FIXME
+}
+
+function draw_stack(canvas, cell_size, stack) {
+
+	let ctx = canvas.getContext("2d");
+
+	let unit = stack[0];
+
+	let gx = unit.x * cell_size + (cell_size / 2);
+	let gy = unit.y * cell_size + (cell_size / 2);
+
+	ctx.fillStyle = "#000000";
+	ctx.beginPath();
+	ctx.arc(gx, gy, cell_size / 3, 0, 2 * Math.PI);
+	ctx.fill();
+
+	ctx.strokeStyle = colours[unit.team];
+	ctx.lineWidth = 2;
+	ctx.beginPath();
+	ctx.arc(gx, gy, cell_size / 3, 0, 2 * Math.PI);
+	ctx.stroke();
+
+	ctx.fillStyle = colours[unit.team];
+	ctx.fillText("+", gx, gy);
 }
 
 function draw_selection_crosshairs(replay, index, canvas, selection, cell_size) {
