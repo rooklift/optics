@@ -283,7 +283,7 @@ function draw_worker(canvas, cell_size, unit) {
 	} else {
 		ctx.fillStyle = colours[unit.team];
 	}
-	ctx.fillText(unit.id.slice(2).toString(), gx, gy);
+	ctx.fillText(unit.id.slice(2).toString(), gx, gy + 1);
 }
 
 function draw_cart(canvas, cell_size, unit) {
