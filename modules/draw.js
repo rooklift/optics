@@ -217,9 +217,9 @@ function draw_info(replay, index, infodiv, selection) {
 
 			lines.push(`<span class="team_${unit.team}">${unit_types[unit.type]}</span>
 						<span class="team_${unit.team}">${unit.id}</span>
-						[<span class="wood">${unit.wood}</span>
+						(<span class="wood">${unit.wood}</span>
 						<span class="coal">${unit.coal}</span>
-						<span class="uranium">${unit.uranium}</span>],
+						<span class="uranium">${unit.uranium}</span>),
 						cd: <span class="team_${unit.team}">${unit.cd}</span>,
 						cmd: <span class="team_${unit.team}">${replay.get_orders_for_unit(index, unit.id)}</span><br>`
 			);
