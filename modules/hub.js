@@ -19,7 +19,7 @@ exports.new_hub = function() {
 
 	hub.resize_time = null;
 
-	hub.selection = null;
+	hub.selection = null;		// Either an object of {x, y}, or an object of {uid}
 
 	return hub;
 };
@@ -118,7 +118,7 @@ let hub_props = {
 			return;
 		}
 
-		this.selection = [x, y];
+		this.selection = {x, y};
 
 		this.draw();
 	},

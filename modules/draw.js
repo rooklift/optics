@@ -40,7 +40,7 @@ function draw(replay, index, canvas, infodiv, selection) {
 
 	// Draw crosshairs now so they're below the stuff...
 
-	draw_selection_crosshairs(canvas, selection, cell_size);
+	draw_selection_crosshairs(replay, index, canvas, selection, cell_size);
 
 	// Resources...
 
@@ -164,13 +164,35 @@ function draw_info(replay, index, infodiv, selection) {
 
 	}
 
-	lines.push(`<br>Selection: [${selection ? selection[0].toString() + ", " + selection[1].toString() : "none"}]<br>`);
+	let selection_unit = null;
+	let selection_x = null;
+	let selection_y = null;
 
-	if (selection) {
+	if (!selection) {
+		lines.push(`<br>(no selection)<br>`);
+	} else if (typeof selection.x === "number" && typeof selection.y === "number") {
+		lines.push(`<br>Selection: [${selection.x}, ${selection.y}]<br>`);
+		selection_x = selection.x;
+		selection_y = selection.y;
+	} else if (typeof selection.uid === "string") {
+		let unit = replay.get_unit_by_id(index, selection.uid);
+		if (!unit) {
+			lines.push(`<br>Selection: unit ${selection.uid} (not present)<br>`);
+		} else {
+			lines.push(`<br>Selection: <span class="team_${unit.team}">${unit_types[unit.type]} ${unit.id}</span>
+						at [${unit.x}, ${unit.y}]<br>`
+			);
+			selection_x = unit.x;
+			selection_y = unit.y;
+		}
+	}
 
-		let cell = replay.get_cell(index, selection[0], selection[1]);
+	if (typeof selection_x === "number" && typeof selection_y === "number") {
 
-		let house = replay.get_houses(index).filter(h => h.x === selection[0] && h.y === selection[1])[0];
+		lines.push(`<br>Cell [${selection_x}, ${selection_y}]<br>`);
+
+		let cell = replay.get_cell(index, selection_x, selection_y);
+		let house = replay.get_house_at(index, selection_x, selection_y);
 
 		if (house) {
 			lines.push(`House of city <span class="team_${house.team}">${house.id}</span><br>`);
@@ -180,7 +202,7 @@ function draw_info(replay, index, infodiv, selection) {
 			lines.push(`No resource<br>`);
 		}
 
-		let units = replay.get_units(index).filter(u => u.x === selection[0] && u.y === selection[1]);
+		let units = replay.get_units(index).filter(u => u.x === selection_x && u.y === selection_y);
 
 		for (let unit of units) {
 			lines.push(`<span class="team_${unit.team}">${unit_types[unit.type]}</span>
@@ -197,14 +219,35 @@ function draw_info(replay, index, infodiv, selection) {
 	infodiv.innerHTML = lines.join("\n");
 }
 
-function draw_selection_crosshairs(canvas, selection, cell_size) {
+function get_xy_from_selection(replay, index, selection) {
 
 	if (!selection) {
-		return;
+		return [-1, -1];
 	}
 
-	let x = selection[0];
-	let y = selection[1];
+	if (typeof selection.x === "number" && typeof selection.y === "number") {
+		return [selection.x, selection.y];
+	}
+
+	if (typeof selection.uid === "string") {
+		let unit = replay.get_unit_by_id(index, selection.uid);
+		if (unit) {
+			return [unit.x, unit.y];
+		} else {
+			return [-1, -1];
+		}
+	}
+
+	throw "bad object";
+}
+
+function draw_selection_crosshairs(replay, index, canvas, selection, cell_size) {
+
+	let [x, y] = get_xy_from_selection(replay, index, selection);
+
+	if (x < 0 || y < 0) {
+		return;
+	}
 
 	let gx = x * cell_size + (cell_size / 2);
 	let gy = y * cell_size + (cell_size / 2) + 1;
