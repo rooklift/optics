@@ -1,7 +1,7 @@
 "use strict";
 
 const colours = ["#ffcc66ff", "#00ccffff"];
-const unit_types = ["Worker", "Cart"];
+const unit_types = ["worker", "cart"];
 const road_colours = ["#222222ff", "#333333ff", "#444444ff", "#555555ff", "#666666ff", "#777777ff", "#777777ff"];
 
 function draw(replay, index, canvas, infodiv, selection) {
@@ -148,17 +148,17 @@ function draw_info(replay, index, infodiv, selection) {
 
 		let my_houses = houses.filter(h => h.team === team);
 
-		lines.push(`<span class="team_${team}"><br>Team ${team}</span>, houses: <span class="team_${team}">${my_houses.length}</span><br>`);
-		lines.push(`Research: <span class="team_${team}">${replay.get_research(index, team)}</span><br>`);
+		lines.push(`<span class="team_${team}"><br>Team ${team}</span> - houses: <span class="team_${team}">${my_houses.length}</span>
+					research: <span class="team_${team}">${replay.get_research(index, team)}</span><br>`);
 
-		lines.push(`Workers: <span class="team_${team}">${units.filter(u => u.team === team && u.type === 0).length}</span>,
-					Carts: <span class="team_${team}">${units.filter(u => u.team === team && u.type === 1).length}</span><br>`
+		lines.push(`workers: <span class="team_${team}">${units.filter(u => u.team === team && u.type === 0).length}</span>,
+					carts: <span class="team_${team}">${units.filter(u => u.team === team && u.type === 1).length}</span><br>`
 		);
 
 		for (let city of cities.filter(c => c.team === team)) {
-			lines.push(`City <span class="team_${team}">${city.id}</span>,
-						Fuel: <span class="team_${team}">${city.fuel}</span>,
-						Upkeep: <span class="team_${team}">${city.lk}</span><br>`
+			lines.push(`- city <span class="team_${team}">${city.id}</span>,
+						fuel: <span class="team_${team}">${city.fuel}</span>,
+						upkeep: <span class="team_${team}">${city.lk}</span><br>`
 			);
 		}
 
@@ -189,18 +189,17 @@ function draw_info(replay, index, infodiv, selection) {
 
 	if (typeof selection_x === "number" && typeof selection_y === "number") {
 
-		lines.push(`<br>Cell [${selection_x}, ${selection_y}]<br>`);
-
 		let cell = replay.get_cell(index, selection_x, selection_y);
 		let house = replay.get_house_at(index, selection_x, selection_y);
 
+		let cell_line = `<br>Cell [${selection_x}, ${selection_y}]`;
 		if (house) {
-			lines.push(`House of city <span class="team_${house.team}">${house.id}</span><br>`);
+			cell_line += ` - <span class="team_${house.team}">city ${house.id}</span>`;
 		} else if (cell.type) {
-			lines.push(`Resource: <span class="${cell.type}">${cell.type}</span> (${cell.amount})<br>`);
-		} else {
-			lines.push(`No resource<br>`);
+			cell_line += ` - <span class="${cell.type}">${cell.type}</span> (${cell.amount})`;
 		}
+		cell_line += "<br>";
+		lines.push(cell_line);
 
 		let units = replay.get_units(index).filter(u => u.x === selection_x && u.y === selection_y);
 
