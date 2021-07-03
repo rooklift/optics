@@ -258,7 +258,6 @@ function float_to_hex_ff(n) {
 function draw_worker(canvas, cell_size, unit) {
 
 	let ctx = canvas.getContext("2d");
-
 	let gx = unit.x * cell_size + (cell_size / 2);
 	let gy = unit.y * cell_size + (cell_size / 2);
 
@@ -287,15 +286,24 @@ function draw_worker(canvas, cell_size, unit) {
 }
 
 function draw_cart(canvas, cell_size, unit) {
-	draw_worker(canvas, cell_size, unit);			// FIXME
+
+	let ctx = canvas.getContext("2d");
+	let gx = unit.x * cell_size + (cell_size / 2);
+	let gy = unit.y * cell_size + (cell_size / 2);
+
+	ctx.fillStyle = colours[unit.team];
+	ctx.fillRect(gx - cell_size / 4, gy - cell_size / 4, cell_size / 2, cell_size / 2);
+
+	ctx.fillStyle = "#000000";
+	ctx.fillRect(gx - cell_size / 4 + 2, gy - cell_size / 4 + 2, cell_size / 2 - 4, cell_size / 2 - 4);
+
 }
 
 function draw_stack(canvas, cell_size, stack) {
 
-	let ctx = canvas.getContext("2d");
-
 	let unit = stack[0];
 
+	let ctx = canvas.getContext("2d");
 	let gx = unit.x * cell_size + (cell_size / 2);
 	let gy = unit.y * cell_size + (cell_size / 2);
 
