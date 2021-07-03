@@ -1,8 +1,8 @@
 "use strict";
 
-const colours = ["#ffcc66ff", "#00ccffff"];
+const colours = ["#ffcc66", "#00ccff"];
 const unit_types = ["worker", "cart"];
-const road_colours = ["#222222ff", "#333333ff", "#444444ff", "#555555ff", "#666666ff", "#777777ff", "#777777ff"];
+const road_colours = ["#222222", "#333333", "#444444", "#555555", "#666666", "#777777", "#777777"];
 
 function draw(replay, index, canvas, infodiv, selection) {
 
@@ -19,7 +19,7 @@ function draw(replay, index, canvas, infodiv, selection) {
 	let cell_size = calculate_cell_size(canvas, width, height);
 
 	let ctx = canvas.getContext("2d");
-	ctx.fillStyle = "#222222ff";
+	ctx.fillStyle = "#222222";
 	ctx.fillRect(0, 0, width * cell_size, height * cell_size);
 
 	ctx.textAlign = "center";
@@ -51,15 +51,15 @@ function draw(replay, index, canvas, infodiv, selection) {
 			let cell = replay.get_cell(index, x, y);
 
 			if (cell.type === "wood" && cell.amount > 0) {
-				ctx.fillStyle = "#64b864ff";
+				ctx.fillStyle = "#64b864";
 				ctx.fillRect(x * cell_size + 2, y * cell_size + 2, cell_size - 4, cell_size - 4);
 			}
 			if (cell.type === "coal" && cell.amount > 0) {
-				ctx.fillStyle = "#707070ff";
+				ctx.fillStyle = "#707070";
 				ctx.fillRect(x * cell_size + 2, y * cell_size + 2, cell_size - 4, cell_size - 4);
 			}
 			if (cell.type === "uranium" && cell.amount > 0) {
-				ctx.fillStyle = "#cc66ccff";
+				ctx.fillStyle = "#cc66cc";
 				ctx.fillRect(x * cell_size + 2, y * cell_size + 2, cell_size - 4, cell_size - 4);
 			}
 		}
@@ -94,13 +94,21 @@ function draw(replay, index, canvas, infodiv, selection) {
 			stacks[`${unit.x},${unit.y}`] = [unit];
 		}
 
-		ctx.fillStyle = colours[unit.team];
-		ctx.strokeStyle = "#000000ff";
 		let gx = unit.x * cell_size + (cell_size / 2);
 		let gy = unit.y * cell_size + (cell_size / 2);
+
+		ctx.fillStyle = "#000000";
 		ctx.beginPath();
 		ctx.arc(gx, gy, cell_size / 3, 0, 2 * Math.PI);
 		ctx.fill();
+
+		ctx.fillStyle = colours[unit.team] + float_to_hex_ff((unit.wood + unit.coal + unit.uranium) / 100);
+		ctx.beginPath();
+		ctx.arc(gx, gy, cell_size / 3, 0, 2 * Math.PI);
+		ctx.fill();
+
+		ctx.strokeStyle = colours[unit.team];
+		ctx.lineWidth = 2;
 		ctx.beginPath();
 		ctx.arc(gx, gy, cell_size / 3, 0, 2 * Math.PI);
 		ctx.stroke();
@@ -111,11 +119,16 @@ function draw(replay, index, canvas, infodiv, selection) {
 		let unit = stack[0];
 		let gx = unit.x * cell_size + (cell_size / 2);
 		let gy = unit.y * cell_size + (cell_size / 2) + 1;
-		ctx.fillStyle = "#000000ff";
 
 		if (stack.length === 1) {
+			if (unit.type === 0 && unit.wood + unit.coal + unit.uranium > 50) {
+				ctx.fillStyle = "#000000";
+			} else {
+				ctx.fillStyle = colours[unit.team];
+			}
 			ctx.fillText(unit.id.slice(2).toString(), gx, gy);
 		} else {
+			ctx.fillStyle = colours[unit.team];
 			ctx.fillText("+", gx, gy);
 		}
 
@@ -241,6 +254,15 @@ function get_xy_from_selection(replay, index, selection) {
 
 function is_night(index) {
 	return (index % 40) > 29;
+}
+
+function float_to_hex_ff(n) {
+	if (n < 0) n = 0;
+	if (n > 1) n = 1;
+	n = Math.floor(n * 255);
+	let s = n.toString(16);
+	if (s.length === 1) s = "0" + s;
+	return s;
 }
 
 function draw_selection_crosshairs(replay, index, canvas, selection, cell_size) {
