@@ -216,7 +216,7 @@ function menu_build() {
 					type: "separator",
 				},
 				{
-					label: "Selection none",
+					label: "Select none",
 					accelerator: "Escape",
 					click: () => {
 						win.webContents.send("call", "escape");
