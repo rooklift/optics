@@ -101,6 +101,10 @@ let replay_props = {
 		return this.get_units(i).filter(u => u.x === x && u.y === y);
 	},
 
+	get_house_at(i, x, y) {
+		return this.get_houses(i).filter(h => h.x === x && h.y === y)[0];
+	},
+
 	get_unit_by_id(i, id) {
 		return this.get_units(i).filter(u => u.id === id)[0];
 	},
