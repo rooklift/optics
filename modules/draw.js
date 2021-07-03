@@ -292,10 +292,20 @@ function draw_cart(canvas, cell_size, unit) {
 	let gy = unit.y * cell_size + (cell_size / 2);
 
 	ctx.fillStyle = colours[unit.team];
-	ctx.fillRect(gx - cell_size / 4, gy - cell_size / 4, cell_size / 2, cell_size / 2);
+	ctx.fillRect(gx - cell_size / 3, gy - cell_size / 3, cell_size * 2 / 3, cell_size * 2 / 3);
 
 	ctx.fillStyle = "#000000";
-	ctx.fillRect(gx - cell_size / 4 + 2, gy - cell_size / 4 + 2, cell_size / 2 - 4, cell_size / 2 - 4);
+	ctx.fillRect(gx - cell_size / 3 + 2, gy - cell_size / 3 + 2, cell_size * 2 / 3 - 4, cell_size * 2 / 3 - 4);
+
+	ctx.fillStyle = colours[unit.team] + float_to_hex_ff((unit.wood + unit.coal + unit.uranium) / 2000);
+	ctx.fillRect(gx - cell_size / 3 + 2, gy - cell_size / 3 + 2, cell_size * 2 / 3 - 4, cell_size * 2 / 3 - 4);
+
+	if (unit.wood + unit.coal + unit.uranium > 1000) {
+		ctx.fillStyle = "#000000";
+	} else {
+		ctx.fillStyle = colours[unit.team];
+	}
+	ctx.fillText(unit.id.slice(2).toString(), gx, gy + 1);
 
 }
 
