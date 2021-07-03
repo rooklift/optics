@@ -164,14 +164,13 @@ function draw_info(replay, index, infodiv, selection) {
 
 	}
 
-	let selection_unit = null;
 	let selection_x = null;
 	let selection_y = null;
 
 	if (!selection) {
 		lines.push(`<br>(no selection)<br>`);
 	} else if (typeof selection.x === "number" && typeof selection.y === "number") {
-		lines.push(`<br>Selection: [${selection.x}, ${selection.y}]<br>`);
+		lines.push(`<br>Selection: cell [${selection.x}, ${selection.y}]<br>`);
 		selection_x = selection.x;
 		selection_y = selection.y;
 	} else if (typeof selection.uid === "string") {
