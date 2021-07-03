@@ -137,7 +137,7 @@ function command_is_for_house(s, x, y) {	// given some command, is it for the ho
 
 	let fields = s.trim().split(" ").filter(z => z !== "");
 
-	if (["r", "bw", "bv"].includes(fields[0])) {
+	if (["r", "bw", "bc"].includes(fields[0])) {
 		return fields[1] === x.toString() && fields[2] === y.toString();
 	}
 
