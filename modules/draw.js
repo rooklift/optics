@@ -78,8 +78,6 @@ function draw(replay, index, canvas, infodiv, selection) {
 		ctx.lineTo(house.x * cell_size + 2, house.y * cell_size + cell_size / 3);
 		ctx.closePath();
 		ctx.fill();
-
-		// ctx.fillRect(house.x * cell_size + 1, house.y * cell_size + 1, cell_size - 2, cell_size - 2);
 	}
 
 	// Doods...
