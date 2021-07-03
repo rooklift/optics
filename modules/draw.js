@@ -24,7 +24,7 @@ function draw(replay, index, canvas, infodiv, selection) {
 
 	ctx.textAlign = "center";
 	ctx.textBaseline = "middle";
-	ctx.font = `${cell_size / 2.5}px Arial`;
+	ctx.font = `${Math.floor(cell_size / 2.5)}px Arial`;
 
 	// Roads...
 
