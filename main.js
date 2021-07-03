@@ -137,6 +137,9 @@ function menu_build() {
 					type: "separator",
 				},
 				{
+					role: "reload",
+				},
+				{
 					label: "Quit",
 					accelerator: "CommandOrControl+Q",
 					role: "quit"
