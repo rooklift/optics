@@ -255,7 +255,7 @@ function float_to_hex_ff(n) {
 	return s;
 }
 
-function draw_worker(canvas, cell_size, unit) {
+function draw_worker(canvas, cell_size, unit, forced_string) {
 
 	let ctx = canvas.getContext("2d");
 	let gx = unit.x * cell_size + (cell_size / 2);
@@ -282,10 +282,15 @@ function draw_worker(canvas, cell_size, unit) {
 	} else {
 		ctx.fillStyle = colours[unit.team];
 	}
-	ctx.fillText(unit.id.slice(2).toString(), gx, gy + 1);
+
+	if (forced_string) {
+		ctx.fillText(forced_string, gx, gy + 1);
+	} else {
+		ctx.fillText(unit.id.slice(2).toString(), gx, gy + 1);
+	}
 }
 
-function draw_cart(canvas, cell_size, unit) {
+function draw_cart(canvas, cell_size, unit, forced_string) {
 
 	let ctx = canvas.getContext("2d");
 	let gx = unit.x * cell_size + (cell_size / 2);
@@ -305,31 +310,33 @@ function draw_cart(canvas, cell_size, unit) {
 	} else {
 		ctx.fillStyle = colours[unit.team];
 	}
-	ctx.fillText(unit.id.slice(2).toString(), gx, gy + 1);
+
+	if (forced_string) {
+		ctx.fillText(forced_string, gx, gy + 1);
+	} else {
+		ctx.fillText(unit.id.slice(2).toString(), gx, gy + 1);
+	}
 
 }
 
 function draw_stack(canvas, cell_size, stack) {
 
-	let unit = stack[0];
+	let first_cart = null;
 
-	let ctx = canvas.getContext("2d");
-	let gx = unit.x * cell_size + (cell_size / 2);
-	let gy = unit.y * cell_size + (cell_size / 2);
+	for (let unit of stack) {
+		if (unit.type === 1) {
+			first_cart = unit;
+			break;
+		}
+	}
 
-	ctx.fillStyle = "#000000";
-	ctx.beginPath();
-	ctx.arc(gx, gy, cell_size / 3, 0, 2 * Math.PI);
-	ctx.fill();
+	// Want to send the helper function a unit of the correct type, on general principles.
 
-	ctx.strokeStyle = colours[unit.team];
-	ctx.lineWidth = 2;
-	ctx.beginPath();
-	ctx.arc(gx, gy, cell_size / 3, 0, 2 * Math.PI);
-	ctx.stroke();
-
-	ctx.fillStyle = colours[unit.team];
-	ctx.fillText("+", gx, gy);
+	if (first_cart) {
+		draw_cart(canvas, cell_size, first_cart, "+");
+	} else {
+		draw_worker(canvas, cell_size, stack[0], "+");
+	}
 }
 
 function draw_selection_crosshairs(replay, index, canvas, selection, cell_size) {
