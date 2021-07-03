@@ -118,7 +118,30 @@ let hub_props = {
 			return;
 		}
 
-		this.selection = {x, y};
+		let units = this.replay.get_units_at(this.index, x, y);
+
+		let current_selected_unit = (this.selection && this.selection.uid) ? this.replay.get_unit_by_id(this.index, this.selection.uid) : undefined;
+		let current_selected_unit_index = -1;
+
+		if (current_selected_unit) {
+			for (let i = 0; i < units.length; i++) {
+				let unit = units[i];
+				if (unit.id === current_selected_unit.id) {
+					current_selected_unit_index = i;
+					break;
+				}
+			}
+		}
+
+		if (units.length === 0) {										// No choice but to select cell
+			this.selection = {x, y};
+		} else if (current_selected_unit_index === -1) {				// Current selection doesn't exist or isn't in this cell, so select top
+			this.selection = {uid: units[0].id};
+		} else if (current_selected_unit_index < units.length - 1) {	// Can select next unit in list
+			this.selection = {uid: units[current_selected_unit_index + 1].id};
+		} else {														// There is no next unit in list
+			this.selection = {x, y};
+		}
 
 		this.draw();
 	},
