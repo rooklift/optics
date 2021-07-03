@@ -24,7 +24,7 @@ function draw(replay, index, canvas, infodiv, selection) {
 
 	ctx.textAlign = "center";
 	ctx.textBaseline = "middle";
-	ctx.font = `${Math.floor(cell_size / 2.5)}px Arial`;
+	ctx.font = `${Math.floor(cell_size / 2.8)}px Arial`;
 
 	// Roads...
 
@@ -97,9 +97,9 @@ function draw(replay, index, canvas, infodiv, selection) {
 	for (let stack of Object.values(stacks)) {
 		if (stack.length === 1) {
 			if (stack[0].type === 0) {
-				draw_worker(canvas, cell_size, stack[0]);
+				draw_worker(canvas, cell_size, stack[0], stack[0].id.slice(2));
 			} else {
-				draw_cart(canvas, cell_size, stack[0]);
+				draw_cart(canvas, cell_size, stack[0], stack[0].id.slice(2));
 			}
 		} else {
 			draw_stack(canvas, cell_size, stack);
@@ -253,7 +253,7 @@ function float_to_hex_ff(n) {
 	return s;
 }
 
-function draw_worker(canvas, cell_size, unit, forced_string) {
+function draw_worker(canvas, cell_size, unit, text) {
 
 	let ctx = canvas.getContext("2d");
 	let gx = unit.x * cell_size + (cell_size / 2);
@@ -281,14 +281,12 @@ function draw_worker(canvas, cell_size, unit, forced_string) {
 		ctx.fillStyle = colours[unit.team];
 	}
 
-	if (forced_string) {
-		ctx.fillText(forced_string, gx, gy + 1);
-	} else {
-		ctx.fillText(unit.id.slice(2).toString(), gx, gy + 1);
+	if (text) {
+		ctx.fillText(text, gx, gy + 1);
 	}
 }
 
-function draw_cart(canvas, cell_size, unit, forced_string) {
+function draw_cart(canvas, cell_size, unit, text) {
 
 	let ctx = canvas.getContext("2d");
 	let gx = unit.x * cell_size + (cell_size / 2);
@@ -309,10 +307,8 @@ function draw_cart(canvas, cell_size, unit, forced_string) {
 		ctx.fillStyle = colours[unit.team];
 	}
 
-	if (forced_string) {
-		ctx.fillText(forced_string, gx, gy + 1);
-	} else {
-		ctx.fillText(unit.id.slice(2).toString(), gx, gy + 1);
+	if (text) {
+		ctx.fillText(text, gx, gy + 1);
 	}
 
 }
