@@ -87,6 +87,9 @@ let replay_props = {
 
 	get_orders_for_unit(i, id) {
 		let list = this.allCommands[i];
+		if (list === undefined) {			// e.g. for very last turn.
+			return "";
+		}
 		list = list.filter(c => c.command.split(" ").includes(id)).map(c => c.command);
 		return list.join(", ");
 	}
