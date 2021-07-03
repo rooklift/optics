@@ -179,23 +179,25 @@ function draw_info(replay, index, infodiv, selection) {
 
 	}
 
+	lines.push("<br><br>");
+
 	// Selection...................................................................................
 
 	let selection_x = null;
 	let selection_y = null;
 
 	if (!selection) {
-		lines.push(`<br>(no selection)<br>`);
+		lines.push(`(no selection)<br>`);
 	} else if (typeof selection.x === "number" && typeof selection.y === "number") {
-		lines.push(`<br>Selection: [${selection.x}, ${selection.y}]<br>`);
+		lines.push(`Selection: [${selection.x}, ${selection.y}]<br>`);
 		selection_x = selection.x;
 		selection_y = selection.y;
 	} else if (typeof selection.uid === "string") {
 		let unit = replay.get_unit_by_id(index, selection.uid);
 		if (!unit) {
-			lines.push(`<br>Selection: unit ${selection.uid} (not present)<br>`);
+			lines.push(`Selection: unit ${selection.uid} (not present)<br>`);
 		} else {
-			lines.push(`<br>Selection: <span class="team_${unit.team}">${unit_types[unit.type]} ${unit.id}</span>
+			lines.push(`Selection: <span class="team_${unit.team}">${unit_types[unit.type]} ${unit.id}</span>
 						at [${unit.x}, ${unit.y}]<br>`
 			);
 			selection_x = unit.x;
