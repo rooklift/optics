@@ -6,6 +6,9 @@ function add_replay_methods(o) {
 
 let replay_props = {
 
+	// Note all of our "get" methods return completely new objects and so
+	// should never be identity-compared with each other.
+
 	width() {
 		return this.stateful[0].map[0].length;
 	},
@@ -82,7 +85,7 @@ let replay_props = {
 	},
 
 	get_team_ids() {
-		return Object.keys(this.stateful[0].teamStates).map((t) => { return parseInt(t, 10); });
+		return Object.keys(this.stateful[0].teamStates).map(t => parseInt(t, 10));
 	},
 
 	get_orders_for_unit(i, id) {
@@ -92,7 +95,16 @@ let replay_props = {
 		}
 		list = list.filter(c => c.command.split(" ").includes(id)).map(c => c.command);
 		return list.join(", ");
-	}
+	},
+
+	get_units_at(i, x, y) {
+		return this.get_units(i).filter(u => u.x === x && u.y === y);
+	},
+
+	get_unit_by_id(i, id) {
+		return this.get_units(i).filter(u => u.id === id)[0];
+	},
+
 };
 
 
