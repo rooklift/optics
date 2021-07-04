@@ -84,7 +84,7 @@ let replay_props = {
 				team: city.team,
 				id: city.id,
 				fuel: city.fuel,
-				lk: city.lightupkeep,
+				upkeep: city.lightupkeep,
 			});
 		}
 		return ret;
