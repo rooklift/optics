@@ -19,12 +19,16 @@ let replay_props = {
 
 	get_cell(i, x, y) {
 
-		let c = this.stateful[i].map[y][x];
+		let cell = this.stateful[i].map[y][x];
 
-		let ret = {x, y};
-		ret.road = c.road ? c.road : 0;
-		ret.type = (c.resource && c.resource.amount > 0) ? c.resource.type : "";
-		ret.amount = (c.resource && c.resource.amount > 0) ? c.resource.amount : 0;
+		let ret = {
+			x: x,
+			y: y,
+			type: (cell.resource && cell.resource.amount > 0) ? cell.resource.type : "",
+			amount: (cell.resource && cell.resource.amount > 0) ? cell.resource.amount : 0,
+			road: cell.road ? cell.road : 0,
+		};
+
 		return ret;
 	},
 
@@ -41,15 +45,15 @@ let replay_props = {
 				let unit = this.stateful[i].teamStates[team_string].units[unit_id];
 
 				ret.push({
+					type: unit.type,
 					team: team,
 					id: unit_id,
-					type: unit.type,
-					cd: unit.cooldown,
 					x: unit.x,
 					y: unit.y,
+					cd: unit.cooldown,
 					wood: unit.cargo.wood,
 					coal: unit.cargo.coal,
-					uranium: unit.cargo.uranium
+					uranium: unit.cargo.uranium,
 				});
 			}
 		}
@@ -61,7 +65,13 @@ let replay_props = {
 		let ret = [];
 		for (let city of Object.values(this.stateful[i].cities)) {
 			for (let house of city.cityCells) {
-				ret.push({x: house.x, y: house.y, cd: house.cooldown, id: city.id, team: city.team});
+				ret.push({
+					team: city.team,
+					id: city.id,
+					x: house.x,
+					y: house.y,
+					cd: house.cooldown,
+				});
 			}
 		}
 		return ret;
@@ -74,7 +84,7 @@ let replay_props = {
 				team: city.team,
 				id: city.id,
 				fuel: city.fuel,
-				lk: city.lightupkeep
+				lk: city.lightupkeep,
 			});
 		}
 		return ret;
