@@ -35,6 +35,7 @@ let hub_props = {
 		switch (key) {
 
 		case "unit_triangles":
+		case "info_font_size":
 			this.draw();
 			break;
 		}

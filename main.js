@@ -12,6 +12,7 @@ config_io.load();
 let config = config_io.config;
 
 let menu = menu_build();
+let menu_is_set = false;
 let win;						// We're supposed to keep global references to every window we make.
 
 if (electron.app.isReady()) {
@@ -80,6 +81,9 @@ function startup() {
 		win.setTitle(msg);
 	});
 
+	electron.Menu.setApplicationMenu(menu);
+	menu_is_set = true;
+
 	// Actually load the page last, I guess, so the event handlers above are already set up.
 	// Send some possibly useful info as a query.
 
@@ -91,8 +95,6 @@ function startup() {
 		path.join(__dirname, "renderer.html"),
 		{query: query}
 	);
-
-	electron.Menu.setApplicationMenu(menu);
 }
 
 // --------------------------------------------------------------------------------------------------------------
@@ -235,6 +237,143 @@ function menu_build() {
 						win.webContents.send("toggle", "unit_triangles");
 					}
 				},
+				{
+					label: "Info font",
+					submenu: [
+						{
+							label: "32",
+							type: "checkbox",
+							checked: config.info_font_size === 32,
+							click: () => {
+								win.webContents.send("set", {
+									key: "info_font_size",
+									value: 32
+								});
+								set_checks("View", "Info font", "32");
+							}
+						},
+						{
+							label: "30",
+							type: "checkbox",
+							checked: config.info_font_size === 30,
+							click: () => {
+								win.webContents.send("set", {
+									key: "info_font_size",
+									value: 30
+								});
+								set_checks("View", "Info font", "30");
+							}
+						},
+						{
+							label: "28",
+							type: "checkbox",
+							checked: config.info_font_size === 28,
+							click: () => {
+								win.webContents.send("set", {
+									key: "info_font_size",
+									value: 28
+								});
+								set_checks("View", "Info font", "28");
+							}
+						},
+						{
+							label: "26",
+							type: "checkbox",
+							checked: config.info_font_size === 26,
+							click: () => {
+								win.webContents.send("set", {
+									key: "info_font_size",
+									value: 26
+								});
+								set_checks("View", "Info font", "26");
+							}
+						},
+						{
+							label: "24",
+							type: "checkbox",
+							checked: config.info_font_size === 24,
+							click: () => {
+								win.webContents.send("set", {
+									key: "info_font_size",
+									value: 24
+								});
+								set_checks("View", "Info font", "24");
+							}
+						},
+						{
+							label: "22",
+							type: "checkbox",
+							checked: config.info_font_size === 22,
+							click: () => {
+								win.webContents.send("set", {
+									key: "info_font_size",
+									value: 22
+								});
+								set_checks("View", "Info font", "22");
+							}
+						},
+						{
+							label: "20",
+							type: "checkbox",
+							checked: config.info_font_size === 20,
+							click: () => {
+								win.webContents.send("set", {
+									key: "info_font_size",
+									value: 20
+								});
+								set_checks("View", "Info font", "20");
+							}
+						},
+						{
+							label: "18",
+							type: "checkbox",
+							checked: config.info_font_size === 18,
+							click: () => {
+								win.webContents.send("set", {
+									key: "info_font_size",
+									value: 18
+								});
+								set_checks("View", "Info font", "18");
+							}
+						},
+						{
+							label: "16",
+							type: "checkbox",
+							checked: config.info_font_size === 16,
+							click: () => {
+								win.webContents.send("set", {
+									key: "info_font_size",
+									value: 16
+								});
+								set_checks("View", "Info font", "16");
+							}
+						},
+						{
+							label: "14",
+							type: "checkbox",
+							checked: config.info_font_size === 14,
+							click: () => {
+								win.webContents.send("set", {
+									key: "info_font_size",
+									value: 14
+								});
+								set_checks("View", "Info font", "14");
+							}
+						},
+						{
+							label: "12",
+							type: "checkbox",
+							checked: config.info_font_size === 12,
+							click: () => {
+								win.webContents.send("set", {
+									key: "info_font_size",
+									value: 12
+								});
+								set_checks("View", "Info font", "12");
+							}
+						},
+					]
+				},
 			]
 		}
 	];
@@ -242,3 +381,59 @@ function menu_build() {
 	return electron.Menu.buildFromTemplate(template);
 }
 
+// --------------------------------------------------------------------------------------------------------------
+
+function get_submenu_items(menupath) {
+
+	// If the path is to a submenu, this returns a list of all items in the submenu.
+	// If the path is to a specific menu item, it just returns that item.
+
+	let o = menu.items;
+	for (let p of menupath) {
+		p = stringify(p);
+		for (let item of o) {
+			if (item.label === p) {
+				if (item.submenu) {
+					o = item.submenu.items;
+					break;
+				} else {
+					return item;		// No submenu so this must be the end.
+				}
+			}
+		}
+	}
+	return o;
+}
+
+function set_checks(...menupath) {
+
+	if (!menu_is_set) {
+		return;
+	}
+
+	// Since I don't know precisely how the menu works behind the scenes,
+	// give a little time for the original click to go through first.
+
+	setTimeout(() => {
+		let items = get_submenu_items(menupath.slice(0, -1));
+		for (let n = 0; n < items.length; n++) {
+			if (items[n].checked !== undefined) {
+				items[n].checked = items[n].label === menupath[menupath.length - 1];
+			}
+		}
+	}, 50);
+}
+
+function set_one_check(state, ...menupath) {
+
+	state = state ? true : false;
+
+	if (!menu_is_set) {
+		return;
+	}
+
+	let item = get_submenu_items(menupath);
+	if (item.checked !== undefined) {
+		item.checked = state;
+	}
+}

@@ -8,6 +8,7 @@ function draw(replay, index, canvas, infodiv, selection) {
 
 	canvas.height = window.innerHeight;
 	canvas.width = canvas.height;
+	infodiv.style["font-size"] = config.info_font_size.toString() + "px";
 
 	if (!replay) {
 		return;
