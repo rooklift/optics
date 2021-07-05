@@ -4,7 +4,7 @@ const {ipcRenderer} = require("electron");
 const querystring = require("querystring");
 
 const config_io = require("./config_io");
-const stringify = require("./stringify");
+const utils = require("./utils");
 
 config_io.load();
 config_io.create_if_needed();
@@ -13,7 +13,7 @@ config_io.create_if_needed();
 // Globals, only want a few...
 
 global.alert = (msg) => {
-	ipcRenderer.send("alert", stringify(msg));
+	ipcRenderer.send("alert", utils.stringify(msg));
 };
 
 global.zoomfactor = parseFloat(querystring.parse(global.location.search)["zoomfactor"]);

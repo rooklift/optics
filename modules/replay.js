@@ -1,5 +1,7 @@
 "use strict";
 
+const utils = require("./utils");
+
 function add_replay_methods(o) {
 	Object.assign(o, replay_props);
 }
@@ -101,18 +103,12 @@ let replay_props = {
 	get_bot_name(team) {
 		try {
 			let fullpath = this.teamDetails[team].name;
-			let sep = null;
-			if (fullpath.includes("\\")) {
-				sep = "\\";
-			} else if (fullpath.includes("/")) {
-				sep = "/";
-			}
-			if (sep) {
-				let elements = fullpath.split(sep);
-				return elements[elements.length - 2];
-			} else {
+			fullpath = utils.replace_all(fullpath, "\\", "/");
+			if (!fullpath.includes("/")) {
 				return fullpath;
 			}
+			let elements = fullpath.split("/");
+			return elements[elements.length - 2];
 		} catch (err) {
 			return "Team ??";
 		}

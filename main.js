@@ -6,7 +6,7 @@ const url = require("url");
 
 const alert = require("./modules/alert_main");
 const config_io = require("./modules/config_io");
-const stringify = require("./modules/stringify");
+const utils = require("./modules/utils");
 
 config_io.load();
 let config = config_io.config;
@@ -387,7 +387,7 @@ function get_submenu_items(menupath) {
 
 	let o = menu.items;
 	for (let p of menupath) {
-		p = stringify(p);
+		p = utils.stringify(p);
 		for (let item of o) {
 			if (item.label === p) {
 				if (item.submenu) {
