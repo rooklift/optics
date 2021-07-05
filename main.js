@@ -221,11 +221,27 @@ function menu_build() {
 					type: "separator",
 				},
 				{
-					label: "Select none",
-					accelerator: "Escape",
+					label: "Autoplay",
+					accelerator: "Space",
 					click: () => {
-						win.webContents.send("call", "escape");
+						win.webContents.send("call", {
+							fn: "toggle_autoplay",
+							args: [250]
+						});
 					}
+				},
+				{
+					label: "Autoplay (fast)",
+					accelerator: "F",
+					click: () => {
+						win.webContents.send("call", {
+							fn: "toggle_autoplay",
+							args: [50]
+						});
+					}
+				},
+				{
+					type: "separator",
 				},
 				{
 					label: "Toggle direction triangles",
@@ -370,6 +386,16 @@ function menu_build() {
 							}
 						},
 					]
+				},
+				{
+					type: "separator",
+				},
+				{
+					label: "Escape",
+					accelerator: "Escape",
+					click: () => {
+						win.webContents.send("call", "escape");
+					}
 				},
 			]
 		}

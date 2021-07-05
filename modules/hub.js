@@ -18,8 +18,8 @@ exports.new_hub = function() {
 	hub.infodiv = document.getElementById("info");
 
 	hub.resize_time = null;
-
-	hub.selection = null;		// Either an object of {x, y}, or an object of {uid}
+	hub.selection = null;			// Either an object of {x, y}, or an object of {uid}
+	hub.active_autoplay = null;		// Set to the return value of setInterval()
 
 	return hub;
 };
@@ -52,6 +52,8 @@ let hub_props = {
 	},
 
 	load_stateful_replay(filepath) {
+
+		this.stop_autoplay();
 
 		if (filepath === __dirname || filepath === ".") {		// Can happen when extra args are passed to main process. Silently return.
 			return;
@@ -89,7 +91,33 @@ let hub_props = {
 		drawtools.draw(this.replay, this.index, this.canvas, this.infodiv, this.selection);
 	},
 
+	start_autoplay(delay = 250) {
+		if (this.active_autoplay) {
+			return;
+		}
+		this.active_autoplay = setInterval(() => {
+			this.forward(1);
+		}, delay);
+	},
+
+	stop_autoplay() {
+		if (!this.active_autoplay) {
+			return;
+		}
+		clearInterval(this.active_autoplay);
+		this.active_autoplay = null;
+	},
+
+	toggle_autoplay(delay) {
+		if (!this.active_autoplay) {
+			this.start_autoplay(delay);
+		} else {
+			this.stop_autoplay();
+		}
+	},
+
 	backward(n) {
+		this.stop_autoplay();
 		this.index -= n;
 		if (this.index < 0) {
 			this.index = 0;
@@ -99,10 +127,10 @@ let hub_props = {
 
 	forward(n) {
 		this.index += n;
-
 		if (this.replay) {
 			if (this.index >= this.replay.stateful.length) {
 				this.index = this.replay.stateful.length - 1;
+				this.stop_autoplay();
 			}
 		}
 		this.draw();
@@ -156,6 +184,7 @@ let hub_props = {
 
 	escape() {
 		this.selection = null;
+		this.stop_autoplay();
 		this.draw();
 	},
 
