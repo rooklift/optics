@@ -19,7 +19,7 @@ exports.new_hub = function() {
 
 	hub.resize_time = null;
 	hub.selection = null;			// Either an object of {x, y}, or an object of {uid}
-	hub.active_autoplay = null;		// Set to the return value of setInterval()
+	hub.active_autoplay = null;		// Set to the return value of setTimeout()
 
 	return hub;
 };
@@ -91,13 +91,10 @@ let hub_props = {
 		drawtools.draw(this.replay, this.index, this.canvas, this.infodiv, this.selection);
 	},
 
-	start_autoplay(delay = 250) {
-		if (this.active_autoplay) {
-			return;
-		}
-		this.active_autoplay = setInterval(() => {
-			this.forward(1);
-		}, delay);
+	continue_autoplay(delay) {
+		// We do things in this order so that, if forward() calls stop_autoplay(), the correct clearTimeout() happens...
+		this.active_autoplay = setTimeout(this.continue_autoplay.bind(this, delay), delay);
+		this.forward(1);
 	},
 
 	stop_autoplay() {
@@ -109,10 +106,10 @@ let hub_props = {
 	},
 
 	toggle_autoplay(delay) {
-		if (!this.active_autoplay) {
-			this.start_autoplay(delay);
-		} else {
+		if (this.active_autoplay) {
 			this.stop_autoplay();
+		} else {
+			this.active_autoplay = setTimeout(this.continue_autoplay.bind(this, delay), delay);
 		}
 	},
 
