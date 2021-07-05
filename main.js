@@ -228,9 +228,6 @@ function menu_build() {
 					}
 				},
 				{
-					type: "separator",
-				},
-				{
 					label: "Toggle direction triangles",
 					accelerator: "CommandOrControl+T",
 					click: () => {
