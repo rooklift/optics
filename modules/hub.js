@@ -132,6 +132,8 @@ let hub_props = {
 				this.index = this.replay.stateful.length - 1;
 				this.stop_autoplay();
 			}
+		} else {
+			this.stop_autoplay();
 		}
 		this.draw();
 	},
