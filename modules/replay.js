@@ -107,6 +107,21 @@ let replay_props = {
 		return list.join(", ");
 	},
 
+	get_direction_for_unit(i, id) {
+		let list = this.allCommands[i];
+		if (list === undefined) {
+			return "";
+		}
+		list = list.filter(c => command_is_for_unit(c.command, id)).map(c => c.command);
+		if (list.length === 1) {
+			let c = list[0].trim();
+			if (c.startsWith("m ")) {
+				return c[c.length - 1];
+			}
+		}
+		return "";
+	},
+
 	get_orders_for_house(i, x, y) {
 		let list = this.allCommands[i];
 		if (list === undefined) {

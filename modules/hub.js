@@ -32,6 +32,13 @@ let hub_props = {
 
 		// Add any followup actions needed for individual keys...
 
+		switch (key) {
+
+		case "unit_triangles":
+			this.draw();
+			break;
+		}
+
 	},
 
 	quit: function() {

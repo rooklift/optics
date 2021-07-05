@@ -225,6 +225,16 @@ function menu_build() {
 						win.webContents.send("call", "escape");
 					}
 				},
+				{
+					type: "separator",
+				},
+				{
+					label: "Toggle direction triangles",
+					accelerator: "CommandOrControl+T",
+					click: () => {
+						win.webContents.send("toggle", "unit_triangles");
+					}
+				},
 			]
 		}
 	];

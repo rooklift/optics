@@ -97,7 +97,8 @@ function draw(replay, index, canvas, infodiv, selection) {
 	for (let stack of Object.values(stacks)) {
 		if (stack.length === 1) {
 			if (stack[0].type === 0) {
-				draw_worker(canvas, cell_size, stack[0], stack[0].id.slice(2));
+				let direction = replay.get_direction_for_unit(index, stack[0].id);
+				draw_worker(canvas, cell_size, stack[0], stack[0].id.slice(2), direction);
 			} else {
 				draw_cart(canvas, cell_size, stack[0], stack[0].id.slice(2));
 			}
@@ -253,21 +254,27 @@ function float_to_hex_ff(n) {
 	return s;
 }
 
-function draw_worker(canvas, cell_size, unit, text) {
+function draw_worker(canvas, cell_size, unit, text, direction) {
 
 	let ctx = canvas.getContext("2d");
 	let gx = unit.x * cell_size + (cell_size / 2);
 	let gy = unit.y * cell_size + (cell_size / 2);
+
+	// Black fcircle underneath...
 
 	ctx.fillStyle = "#000000";
 	ctx.beginPath();
 	ctx.arc(gx, gy, cell_size / 3, 0, 2 * Math.PI);
 	ctx.fill();
 
+	// Semi-transparent team-coloured fcircle, to indicate fullness...
+
 	ctx.fillStyle = colours[unit.team] + float_to_hex_ff((unit.wood + unit.coal + unit.uranium) / 100);
 	ctx.beginPath();
 	ctx.arc(gx, gy, cell_size / 3, 0, 2 * Math.PI);
 	ctx.fill();
+
+	// Empty team-coloured circle around the edge...
 
 	ctx.strokeStyle = colours[unit.team];
 	ctx.lineWidth = 2;
@@ -275,13 +282,14 @@ function draw_worker(canvas, cell_size, unit, text) {
 	ctx.arc(gx, gy, cell_size / 3, 0, 2 * Math.PI);
 	ctx.stroke();
 
-	if (unit.wood + unit.coal + unit.uranium > 50) {
-		ctx.fillStyle = "#000000";
-	} else {
-		ctx.fillStyle = colours[unit.team];
-	}
+	// Direction / text...
 
-	if (text) {
+	let colour = unit.wood + unit.coal + unit.uranium > 50 ? "#000000" : colours[unit.team];
+
+	if (config.unit_triangles && direction) {
+		draw_triangle(canvas, unit.x, unit.y, direction, cell_size, colour);
+	} else if (!config.unit_triangles && text) {
+		ctx.fillStyle = colour;
 		ctx.fillText(text, gx, gy + 1);
 	}
 }
@@ -330,6 +338,52 @@ function draw_stack(canvas, cell_size, stack) {
 		draw_cart(canvas, cell_size, first_cart, "+");
 	} else {
 		draw_worker(canvas, cell_size, stack[0], "+");
+	}
+}
+
+function draw_triangle(canvas, x, y, direction, cell_size, colour) {
+
+	let ctx = canvas.getContext("2d");
+	ctx.strokeStyle = colour;
+
+	switch (direction) {
+
+	case "n":
+		ctx.beginPath();
+		ctx.moveTo(x * cell_size + cell_size / 2,   y * cell_size + cell_size * 0.25);
+		ctx.lineTo(x * cell_size + cell_size / 1.5, y * cell_size + cell_size / 2);
+		ctx.lineTo(x * cell_size + cell_size / 3,   y * cell_size + cell_size / 2);
+		ctx.closePath();
+		ctx.stroke();
+		break;
+
+	case "s":
+		ctx.beginPath();
+		ctx.moveTo(x * cell_size + cell_size / 2,   y * cell_size + cell_size * 0.75);
+		ctx.lineTo(x * cell_size + cell_size / 1.5, y * cell_size + cell_size / 2);
+		ctx.lineTo(x * cell_size + cell_size / 3,   y * cell_size + cell_size / 2);
+		ctx.closePath();
+		ctx.stroke();
+		break;
+
+	case "e":
+		ctx.beginPath();
+		ctx.moveTo(x * cell_size + cell_size * 0.75, y * cell_size + cell_size / 2);
+		ctx.lineTo(x * cell_size + cell_size / 2,    y * cell_size + cell_size / 1.5);
+		ctx.lineTo(x * cell_size + cell_size / 2,    y * cell_size + cell_size / 3);
+		ctx.closePath();
+		ctx.stroke();
+		break;
+
+	case "w":
+		ctx.beginPath();
+		ctx.moveTo(x * cell_size + cell_size * 0.25, y * cell_size + cell_size / 2);
+		ctx.lineTo(x * cell_size + cell_size / 2,    y * cell_size + cell_size / 1.5);
+		ctx.lineTo(x * cell_size + cell_size / 2,    y * cell_size + cell_size / 3);
+		ctx.closePath();
+		ctx.stroke();
+		break;
+
 	}
 }
 
