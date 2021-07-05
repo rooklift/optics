@@ -70,7 +70,7 @@ let hub_props = {
 			return;
 		}
 
-		if (!o || typeof o !== "object" || o === null || !o.stateful) {
+		if (typeof o !== "object" || o === null || !o.stateful) {
 			alert("This does not appear to be a stateful replay.");
 			return;
 		}
