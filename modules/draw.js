@@ -346,6 +346,7 @@ function draw_triangle(canvas, x, y, direction, cell_size, colour) {
 
 	let ctx = canvas.getContext("2d");
 	ctx.strokeStyle = colour;
+	ctx.lineWidth = 2;
 
 	switch (direction) {
 
