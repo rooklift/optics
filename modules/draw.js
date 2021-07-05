@@ -99,9 +99,17 @@ function draw(replay, index, canvas, infodiv, selection) {
 		if (stack.length === 1) {
 			let direction = replay.get_direction_for_unit(index, stack[0].id);
 			if (stack[0].type === 0) {
-				draw_worker(canvas, cell_size, stack[0], stack[0].id.slice(2), direction);
+				draw_worker(
+					canvas, cell_size, stack[0],
+					config.unit_triangles ? null : stack[0].id.slice(2),
+					config.unit_triangles ? direction : null
+				);
 			} else {
-				draw_cart(canvas, cell_size, stack[0], stack[0].id.slice(2), direction);
+				draw_cart(
+					canvas, cell_size, stack[0],
+					config.unit_triangles ? null : stack[0].id.slice(2),
+					config.unit_triangles ? direction : null
+				);
 			}
 		} else {
 			draw_stack(canvas, cell_size, stack);
@@ -288,9 +296,9 @@ function draw_worker(canvas, cell_size, unit, text, direction) {
 
 	let colour = unit.wood + unit.coal + unit.uranium > 50 ? "#000000" : colours[unit.team];
 
-	if (config.unit_triangles && direction) {
+	if (direction) {
 		draw_triangle(canvas, unit.x, unit.y, direction, cell_size, colour);
-	} else if (!config.unit_triangles && text) {
+	} else if (text) {
 		ctx.fillStyle = colour;
 		ctx.fillText(text, gx, gy + 1);
 	}
@@ -315,9 +323,9 @@ function draw_cart(canvas, cell_size, unit, text, direction) {
 
 	let colour = unit.wood + unit.coal + unit.uranium > 1000 ? "#000000" : colours[unit.team];
 
-	if (config.unit_triangles && direction) {
+	if (direction) {
 		draw_triangle(canvas, unit.x, unit.y, direction, cell_size, colour);
-	} else if (!config.unit_triangles && text) {
+	} else if (text) {
 		ctx.fillStyle = colour;
 		ctx.fillText(text, gx, gy + 1);
 	}
@@ -338,9 +346,9 @@ function draw_stack(canvas, cell_size, stack) {
 	// Want to send the helper function a unit of the correct type, on general principles.
 
 	if (first_cart) {
-		draw_cart(canvas, cell_size, first_cart, "+");
+		draw_cart(canvas, cell_size, first_cart, "+", null);
 	} else {
-		draw_worker(canvas, cell_size, stack[0], "+");
+		draw_worker(canvas, cell_size, stack[0], "+", null);
 	}
 }
 
