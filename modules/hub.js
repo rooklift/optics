@@ -98,18 +98,17 @@ let hub_props = {
 	},
 
 	stop_autoplay() {
-		if (this.active_autoplay === null) {
-			return;
+		if (this.active_autoplay !== null) {
+			clearTimeout(this.active_autoplay);
+			this.active_autoplay = null;
 		}
-		clearTimeout(this.active_autoplay);
-		this.active_autoplay = null;
 	},
 
 	toggle_autoplay(delay) {
-		if (this.active_autoplay === null) {
-			this.active_autoplay = setTimeout(this.continue_autoplay.bind(this, delay), delay);
-		} else {
+		if (this.active_autoplay !== null) {
 			this.stop_autoplay();
+		} else {
+			this.active_autoplay = setTimeout(this.continue_autoplay.bind(this, delay), delay);
 		}
 	},
 
