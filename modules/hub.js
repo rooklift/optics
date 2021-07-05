@@ -98,7 +98,7 @@ let hub_props = {
 	},
 
 	stop_autoplay() {
-		if (!this.active_autoplay) {
+		if (this.active_autoplay === null) {
 			return;
 		}
 		clearTimeout(this.active_autoplay);
@@ -106,10 +106,10 @@ let hub_props = {
 	},
 
 	toggle_autoplay(delay) {
-		if (this.active_autoplay) {
-			this.stop_autoplay();
-		} else {
+		if (this.active_autoplay === null) {
 			this.active_autoplay = setTimeout(this.continue_autoplay.bind(this, delay), delay);
+		} else {
+			this.stop_autoplay();
 		}
 	},
 
