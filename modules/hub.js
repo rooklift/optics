@@ -108,7 +108,7 @@ let hub_props = {
 		if (this.active_autoplay !== null) {
 			this.stop_autoplay();
 		} else {
-			this.active_autoplay = setTimeout(this.continue_autoplay.bind(this, delay), delay);
+			this.continue_autoplay(delay);
 		}
 	},
 
