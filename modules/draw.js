@@ -135,10 +135,11 @@ function draw_info(replay, index, infodiv, selection) {
 
 	for (let team of replay.get_team_ids()) {
 
+		let teamname = replay.get_bot_name(team);
 		let my_houses = houses.filter(h => h.team === team);
 
-		lines.push(`<span class="team_${team}"><br>Team ${team}</span> - houses: <span class="team_${team}">${my_houses.length},</span>
-					research: <span class="team_${team}">${replay.get_research(index, team)}</span><br>`);
+		lines.push(`<span class="team_${team}"><br>${teamname}</span> - houses: <span class="team_${team}">${my_houses.length},</span>
+					rp: <span class="team_${team}">${replay.get_research(index, team)}</span><br>`);
 
 		lines.push(`workers: <span class="team_${team}">${units.filter(u => u.team === team && u.type === 0).length}</span>,
 					carts: <span class="team_${team}">${units.filter(u => u.team === team && u.type === 1).length}</span><br>`

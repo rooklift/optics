@@ -98,6 +98,26 @@ let replay_props = {
 		return Object.keys(this.stateful[0].teamStates).map(t => parseInt(t, 10));
 	},
 
+	get_bot_name(team) {
+		try {
+			let fullpath = this.teamDetails[team].name;
+			let sep = null;
+			if (fullpath.includes("\\")) {
+				sep = "\\";
+			} else if (fullpath.includes("/")) {
+				sep = "/";
+			}
+			if (sep) {
+				let elements = fullpath.split(sep);
+				return elements[elements.length - 2];
+			} else {
+				return fullpath;
+			}
+		} catch (err) {
+			return "Team ??";
+		}
+	},
+
 	get_orders_for_unit(i, id) {
 		let list = this.allCommands[i];
 		if (list === undefined) {
