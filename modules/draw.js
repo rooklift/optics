@@ -96,11 +96,11 @@ function draw(replay, index, canvas, infodiv, selection) {
 
 	for (let stack of Object.values(stacks)) {
 		if (stack.length === 1) {
+			let direction = replay.get_direction_for_unit(index, stack[0].id);
 			if (stack[0].type === 0) {
-				let direction = replay.get_direction_for_unit(index, stack[0].id);
 				draw_worker(canvas, cell_size, stack[0], stack[0].id.slice(2), direction);
 			} else {
-				draw_cart(canvas, cell_size, stack[0], stack[0].id.slice(2));
+				draw_cart(canvas, cell_size, stack[0], stack[0].id.slice(2), direction);
 			}
 		} else {
 			draw_stack(canvas, cell_size, stack);
@@ -294,7 +294,7 @@ function draw_worker(canvas, cell_size, unit, text, direction) {
 	}
 }
 
-function draw_cart(canvas, cell_size, unit, text) {
+function draw_cart(canvas, cell_size, unit, text, direction) {
 
 	let ctx = canvas.getContext("2d");
 	let gx = unit.x * cell_size + (cell_size / 2);
@@ -309,13 +309,14 @@ function draw_cart(canvas, cell_size, unit, text) {
 	ctx.fillStyle = colours[unit.team] + float_to_hex_ff((unit.wood + unit.coal + unit.uranium) / 2000);
 	ctx.fillRect(gx - cell_size / 3 + 2, gy - cell_size / 3 + 2, cell_size * 2 / 3 - 4, cell_size * 2 / 3 - 4);
 
-	if (unit.wood + unit.coal + unit.uranium > 1000) {
-		ctx.fillStyle = "#000000";
-	} else {
-		ctx.fillStyle = colours[unit.team];
-	}
+	// Direction / text...
 
-	if (text) {
+	let colour = unit.wood + unit.coal + unit.uranium > 1000 ? "#000000" : colours[unit.team];
+
+	if (config.unit_triangles && direction) {
+		draw_triangle(canvas, unit.x, unit.y, direction, cell_size, colour);
+	} else if (!config.unit_triangles && text) {
+		ctx.fillStyle = colour;
 		ctx.fillText(text, gx, gy + 1);
 	}
 
