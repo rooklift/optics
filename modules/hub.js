@@ -101,7 +101,7 @@ let hub_props = {
 		if (!this.active_autoplay) {
 			return;
 		}
-		clearInterval(this.active_autoplay);
+		clearTimeout(this.active_autoplay);
 		this.active_autoplay = null;
 	},
 
