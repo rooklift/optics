@@ -108,7 +108,11 @@ let replay_props = {
 				return fullpath;
 			}
 			let elements = fullpath.split("/");
-			return elements[elements.length - 2];
+			let ret = elements[elements.length - 2];
+			if (ret === "" || ret === ".") {
+				return fullpath;
+			}
+			return ret;
 		} catch (err) {
 			return "Team ??";
 		}
