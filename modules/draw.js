@@ -20,7 +20,7 @@ function draw(replay, index, canvas, infodiv, selection) {
 	let cell_size = calculate_cell_size(canvas, width, height);
 
 	let ctx = canvas.getContext("2d");
-	ctx.fillStyle = "#222222";
+	ctx.fillStyle = is_night(index) ? "#080808" : "#222222";
 	ctx.fillRect(0, 0, width * cell_size, height * cell_size);
 
 	ctx.textAlign = "center";
