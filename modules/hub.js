@@ -92,10 +92,12 @@ let hub_props = {
 	},
 
 	continue_autoplay(delay) {
-		// We do things in this order so that, if forward() calls stop_autoplay(), the correct clearTimeout() happens.
-		// Sadly this defeats the purpose of using setTimeout rather than setInterval, hmm...
-		this.active_autoplay = setTimeout(this.continue_autoplay.bind(this, delay), delay);
+		this.active_autoplay = setTimeout(() => {}, 0);			// dummy timeout - we check if forward() cancels it.
 		this.forward(1);
+		if (this.active_autoplay) {								// forward() did not cancel it, so it's
+			clearTimeout(this.active_autoplay);					// OK to schedule the real function
+			this.active_autoplay = setTimeout(this.continue_autoplay.bind(this, delay), delay);
+		}
 	},
 
 	stop_autoplay() {
