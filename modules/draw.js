@@ -139,6 +139,13 @@ function draw_info(replay, index, infodiv, selection) {
 
 	lines.push(`<br>Turn ${index} ${is_night(index) ? "(night)" : "(day)"}<br>`);
 
+	let rem = replay.get_remaining_resources(index);
+
+	lines.push(`Remaining: <span class="wood">${rem.wood}</span>,
+				<span class="coal">${rem.coal}</span>,
+				<span class="uranium">${rem.uranium}</span><br>`
+	);
+
 	// Teams.......................................................................................
 
 	for (let team of replay.get_team_ids()) {

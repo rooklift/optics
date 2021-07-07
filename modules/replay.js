@@ -92,6 +92,19 @@ let replay_props = {
 		return ret;
 	},
 
+	get_remaining_resources(i) {
+		let ret = {wood: 0, coal: 0, uranium: 0};
+		for (let x = 0; x < this.width(); x++) {
+			for (let y = 0; y < this.height(); y++) {
+				let cell = this.get_cell(i, x, y);
+				if (cell.type) {
+					ret[cell.type] += cell.amount;
+				}
+			}
+		}
+		return ret;
+	},
+
 	get_research(i, team) {
 		return this.stateful[i].teamStates[team].researchPoints;
 	},
