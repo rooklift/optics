@@ -139,6 +139,8 @@ function draw_info(replay, index, infodiv, selection) {
 
 	lines.push(`<br>Turn ${index} ${is_night(index) ? "(night)" : "(day)"}<br>`);
 
+	lines.push(`Seed: ${replay.seed}<br>`);
+
 	let rem = replay.get_remaining_resources(index);
 
 	lines.push(`Remaining: <span class="wood">${rem.wood}</span>,
