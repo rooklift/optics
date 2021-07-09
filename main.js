@@ -253,6 +253,14 @@ function menu_build() {
 					}
 				},
 				{
+					label: "Turns start at 1",
+					type: "checkbox",
+					checked: config.turns_start_at_one,
+					click: () => {
+						win.webContents.send("toggle", "turns_start_at_one");
+					}
+				},
+				{
 					label: "Info font",
 					submenu: [
 						{

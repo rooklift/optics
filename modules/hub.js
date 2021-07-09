@@ -36,6 +36,7 @@ let hub_props = {
 
 		case "unit_triangles":
 		case "info_font_size":
+		case "turns_start_at_one":
 			this.draw();
 			break;
 		}

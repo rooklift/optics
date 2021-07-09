@@ -24,6 +24,7 @@ exports.defaults = {
 	"height": 768,
 	"unit_triangles": true,
 	"info_font_size": 22,
+	"turns_start_at_one": false,
 };
 
 // ------------------------------------------------------------------------------------------------
