@@ -1,14 +1,17 @@
 "use strict";
 
+const {command_is_for_unit, command_is_for_house} = require("./replay_utils");
 const utils = require("./utils");
+
 
 function fixed_stateful_replay(raw_replay) {
 	let ret = {r: raw_replay};
-	Object.assign(ret, replay_props);
+	Object.assign(ret, stateful_replay_props);
 	return ret;
 }
 
-let replay_props = {
+
+let stateful_replay_props = {
 
 	// Note all of our "get" methods return completely new objects and so
 	// should never be identity-compared with each other.
@@ -141,21 +144,23 @@ let replay_props = {
 		}
 	},
 
-	get_orders_for_unit(i, id) {
+	get_all_commands(i) {
 		let list = this.r.allCommands[i];
 		if (list === undefined) {
-			return "";
+			return [];
 		}
-		list = list.filter(c => command_is_for_unit(c.command, id)).map(c => c.command);
+		return list.map(c => c.command);
+	},
+
+	get_orders_for_unit(i, id) {
+		let list = this.get_all_commands(i);
+		list = list.filter(c => command_is_for_unit(c, id));
 		return list.join(", ");
 	},
 
 	get_direction_for_unit(i, id) {
-		let list = this.r.allCommands[i];
-		if (list === undefined) {
-			return "";
-		}
-		list = list.filter(c => command_is_for_unit(c.command, id)).map(c => c.command);
+		let list = this.get_all_commands(i);
+		list = list.filter(c => command_is_for_unit(c, id));
 		if (list.length === 1) {
 			let c = list[0].trim();
 			if (c.startsWith("m ")) {
@@ -166,11 +171,8 @@ let replay_props = {
 	},
 
 	get_orders_for_house(i, x, y) {
-		let list = this.r.allCommands[i];
-		if (list === undefined) {
-			return "";
-		}
-		list = list.filter(c => command_is_for_house(c.command, x, y)).map(c => c.command);
+		let list = this.get_all_commands(i);
+		list = list.filter(c => command_is_for_house(c, x, y));
 		return list.join(", ");
 	},
 
@@ -189,29 +191,5 @@ let replay_props = {
 };
 
 // ------------------------------------------------------------------------------------------------
-
-function command_is_for_unit(s, id) {		// given some command, is it for the unit with this id?
-
-	let fields = s.trim().split(" ").filter(z => z !== "");
-
-	if (["m", "bcity", "p", "t"].includes(fields[0])) {
-		return fields[1] === id;
-	}
-
-	return false;
-}
-
-function command_is_for_house(s, x, y) {	// given some command, is it for the house at [x, y] ?
-
-	let fields = s.trim().split(" ").filter(z => z !== "");
-
-	if (["r", "bw", "bc"].includes(fields[0])) {
-		return fields[1] === x.toString() && fields[2] === y.toString();
-	}
-
-	return false;
-}
-
-
 
 module.exports = fixed_stateful_replay;
