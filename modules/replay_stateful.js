@@ -150,13 +150,13 @@ let stateful_replay_props = {
 	},
 
 	get_orders_for_unit(i, id) {
-		let list = this.get_all_commands();
+		let list = this.get_all_commands(i);
 		list = list.filter(c => command_is_for_unit(c, id));
 		return list.join(", ");
 	},
 
 	get_direction_for_unit(i, id) {
-		let list = this.get_all_commands();
+		let list = this.get_all_commands(i);
 		list = list.filter(c => command_is_for_unit(c, id));
 		if (list.length === 1) {
 			let c = list[0].trim();
@@ -168,7 +168,7 @@ let stateful_replay_props = {
 	},
 
 	get_orders_for_house(i, x, y) {
-		let list = this.get_all_commands();
+		let list = this.get_all_commands(i);
 		list = list.filter(c => command_is_for_house(c, x, y));
 		return list.join(", ");
 	},
