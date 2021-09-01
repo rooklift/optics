@@ -89,7 +89,7 @@ let hub_props = {
 		this.index = 0;
 		this.selection = null;
 
-		// this.draw();
+		this.draw();
 	},
 
 	draw() {

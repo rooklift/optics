@@ -141,21 +141,23 @@ let stateful_replay_props = {
 		}
 	},
 
-	get_orders_for_unit(i, id) {
+	get_all_commands(i) {
 		let list = this.r.allCommands[i];
 		if (list === undefined) {
-			return "";
+			return [];
 		}
-		list = list.filter(c => command_is_for_unit(c.command, id)).map(c => c.command);
+		return list.map(c => c.command);
+	},
+
+	get_orders_for_unit(i, id) {
+		let list = this.get_all_commands();
+		list = list.filter(c => command_is_for_unit(c, id));
 		return list.join(", ");
 	},
 
 	get_direction_for_unit(i, id) {
-		let list = this.r.allCommands[i];
-		if (list === undefined) {
-			return "";
-		}
-		list = list.filter(c => command_is_for_unit(c.command, id)).map(c => c.command);
+		let list = this.get_all_commands();
+		list = list.filter(c => command_is_for_unit(c, id));
 		if (list.length === 1) {
 			let c = list[0].trim();
 			if (c.startsWith("m ")) {
@@ -166,11 +168,8 @@ let stateful_replay_props = {
 	},
 
 	get_orders_for_house(i, x, y) {
-		let list = this.r.allCommands[i];
-		if (list === undefined) {
-			return "";
-		}
-		list = list.filter(c => command_is_for_house(c.command, x, y)).map(c => c.command);
+		let list = this.get_all_commands();
+		list = list.filter(c => command_is_for_house(c, x, y));
 		return list.join(", ");
 	},
 
