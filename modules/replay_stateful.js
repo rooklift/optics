@@ -1,12 +1,15 @@
 "use strict";
 
+const {command_is_for_unit, command_is_for_house} = require("./replay_utils");
 const utils = require("./utils");
+
 
 function fixed_stateful_replay(raw_replay) {
 	let ret = {r: raw_replay};
 	Object.assign(ret, stateful_replay_props);
 	return ret;
 }
+
 
 let stateful_replay_props = {
 
@@ -188,29 +191,5 @@ let stateful_replay_props = {
 };
 
 // ------------------------------------------------------------------------------------------------
-
-function command_is_for_unit(s, id) {		// given some command, is it for the unit with this id?
-
-	let fields = s.trim().split(" ").filter(z => z !== "");
-
-	if (["m", "bcity", "p", "t"].includes(fields[0])) {
-		return fields[1] === id;
-	}
-
-	return false;
-}
-
-function command_is_for_house(s, x, y) {	// given some command, is it for the house at [x, y] ?
-
-	let fields = s.trim().split(" ").filter(z => z !== "");
-
-	if (["r", "bw", "bc"].includes(fields[0])) {
-		return fields[1] === x.toString() && fields[2] === y.toString();
-	}
-
-	return false;
-}
-
-
 
 module.exports = fixed_stateful_replay;
