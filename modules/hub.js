@@ -83,7 +83,7 @@ let hub_props = {
 		} else if (o.steps) {
 			this.replay = fixed_kaggle_replay(o);
 		} else {
-			alert("This does not appear to be a replay.");
+			alert("This does not appear to be a stateful replay.");
 			return;
 		}
 
