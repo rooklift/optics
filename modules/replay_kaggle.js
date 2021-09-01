@@ -88,6 +88,8 @@ let kaggle_replay_props = {
 		}
 		let actions0 = this.r.steps[i + 1][0].action;
 		let actions1 = this.r.steps[i + 1][1].action;
+		if (!actions0) actions0 = [];
+		if (!actions1) actions1 = [];
 		return actions0.concat(actions1);
 	},
 
