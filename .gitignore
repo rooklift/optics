@@ -1,2 +1,2 @@
-
-*.zip
+dist/
+electron_zipped/
