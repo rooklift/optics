@@ -22,6 +22,9 @@ function fixed_kaggle_replay(raw_replay) {
 
 let kaggle_replay_props = {
 
+	// Note all of our "get" methods return completely new objects and so
+	// should never be identity-compared with each other.
+
 	seed() {
 		return this.r.configuration.seed;
 	},
@@ -35,23 +38,23 @@ let kaggle_replay_props = {
 	},
 
 	length() {
-		return this.frames.length;
+		return this.r.steps.length;
 	},
 
 	get_cell(i, x, y) {
-		return this.frames[i].map[x][y];		// FIXME - would rather return a new object.
+		return Object.assign({}, this.frames[i].map[x][y]);
 	},
 
 	get_units(i) {
-		return this.frames[i].units;			// FIXME - would rather return new objects.
+		return this.frames[i].units.map(unit => Object.assign({}, unit));
 	},
 
 	get_houses(i) {
-		return this.frames[i].houses;			// FIXME
+		return this.frames[i].houses.map(house => Object.assign({}, house));
 	},
 
 	get_cities(i) {
-		return this.frames[i].cities;			// FIXME
+		return this.frames[i].cities.map(city => Object.assign({}, city));
 	},
 
 	get_remaining_resources(i) {
