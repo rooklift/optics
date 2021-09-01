@@ -35,27 +35,36 @@ let kaggle_replay_props = {
 	},
 
 	get_cell(i, x, y) {
-
+		return this.frames[i].map[x][y];		// FIXME - would rather return a new object.
 	},
 
 	get_units(i) {
-
+		return this.frames[i].units;			// FIXME - would rather return new objects.
 	},
 
 	get_houses(i) {
-
+		return this.frames[i].houses;			// FIXME
 	},
 
 	get_cities(i) {
-
+		return this.frames[i].cities;			// FIXME
 	},
 
 	get_remaining_resources(i) {
-
+		let ret = {wood: 0, coal: 0, uranium: 0};
+		for (let x = 0; x < this.width(); x++) {
+			for (let y = 0; y < this.height(); y++) {
+				let cell = this.get_cell(i, x, y);
+				if (cell.type) {
+					ret[cell.type] += cell.amount;
+				}
+			}
+		}
+		return ret;
 	},
 
 	get_research(i, team) {
-
+		return this.frames[i].rp[team];
 	},
 
 	get_team_ids() {
@@ -67,19 +76,19 @@ let kaggle_replay_props = {
 	},
 
 	get_orders_for_unit(i, id) {
-
+		return "";			// FIXME
 	},
 
 	get_direction_for_unit(i, id) {
-
+		return "";			// FIXME
 	},
 
 	get_orders_for_house(i, x, y) {
-
+		return "";			// FIXME
 	},
 
 	get_units_at(i, x, y) {
-
+		return [];			// FIXME
 	},
 
 	get_house_at(i, x, y) {
@@ -136,7 +145,7 @@ function make_frame(width, height, updates) {
 		}
 
 		if (fields[0] === "u") {
-			let type = ["worker", "cart"][parseInt(fields[1], 10)];
+			let type = parseInt(fields[1], 10);
 			let team = parseInt(fields[2], 10);
 			let id = fields[3];
 			let x = parseInt(fields[4], 10);
