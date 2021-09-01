@@ -80,8 +80,11 @@ let hub_props = {
 
 		if (o.stateful) {
 			this.replay = fixed_stateful_replay(o);
-		} else {
+		} else if (o.steps) {
 			this.replay = fixed_kaggle_replay(o);
+		} else {
+			alert("This does not appear to be a replay.");
+			return;
 		}
 
 		ipcRenderer.send("set_title", path.basename(filepath));
