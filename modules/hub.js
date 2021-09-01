@@ -4,8 +4,8 @@ const fs = require("fs");
 const path = require("path");
 const {ipcRenderer} = require("electron");
 
-const {defaults_classified} = require("./config_io");
-const fixed_stateful_replay = require("./replay");
+const fixed_kaggle_replay = require("./replay_kaggle");
+const fixed_stateful_replay = require("./replay_stateful");
 const drawtools = require("./draw");
 
 exports.new_hub = function() {
@@ -73,18 +73,23 @@ let hub_props = {
 			return;
 		}
 
-		if (typeof o !== "object" || o === null || !o.stateful) {
-			alert("This does not appear to be a stateful replay.");
+		if (typeof o !== "object" || o === null) {
+			alert("This does not appear to be a replay.");
 			return;
+		}
+
+		if (o.stateful) {
+			this.replay = fixed_stateful_replay(o);
+		} else {
+			this.replay = fixed_kaggle_replay(o);
 		}
 
 		ipcRenderer.send("set_title", path.basename(filepath));
 
 		this.index = 0;
 		this.selection = null;
-		this.replay = fixed_stateful_replay(o);
 
-		this.draw();
+		// this.draw();
 	},
 
 	draw() {

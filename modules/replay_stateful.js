@@ -4,11 +4,11 @@ const utils = require("./utils");
 
 function fixed_stateful_replay(raw_replay) {
 	let ret = {r: raw_replay};
-	Object.assign(ret, replay_props);
+	Object.assign(ret, stateful_replay_props);
 	return ret;
 }
 
-let replay_props = {
+let stateful_replay_props = {
 
 	// Note all of our "get" methods return completely new objects and so
 	// should never be identity-compared with each other.
