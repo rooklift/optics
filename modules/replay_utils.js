@@ -47,53 +47,53 @@ function make_frame(width, height, updates) {
 		let fields = line.split(" ").filter(z => z !== "");
 
 		if (fields[0] === "rp") {
-			let team = parseInt(fields[1], 10);
-			let points = parseInt(fields[2], 10);
+			let team = parseFloat(fields[1]);
+			let points = parseFloat(fields[2]);
 			frame.rp[team] = points;
 		}
 
 		if (fields[0] === "r") {
 			let type = fields[1];
-			let x = parseInt(fields[2], 10);
-			let y = parseInt(fields[3], 10);
-			let amount = parseInt(fields[4], 10);
+			let x = parseFloat(fields[2]);
+			let y = parseFloat(fields[3]);
+			let amount = parseFloat(fields[4]);
 			frame.map[x][y].type = amount > 0 ? type : "";
 			frame.map[x][y].amount = amount;
 		}
 
 		if (fields[0] === "u") {
-			let type = parseInt(fields[1], 10);
-			let team = parseInt(fields[2], 10);
+			let type = parseFloat(fields[1]);
+			let team = parseFloat(fields[2]);
 			let id = fields[3];
-			let x = parseInt(fields[4], 10);
-			let y = parseInt(fields[5], 10);
-			let cd = parseInt(fields[6], 10);
-			let wood = parseInt(fields[7], 10);
-			let coal = parseInt(fields[8], 10);
-			let uranium = parseInt(fields[9], 10);
+			let x = parseFloat(fields[4]);
+			let y = parseFloat(fields[5]);
+			let cd = parseFloat(fields[6]);
+			let wood = parseFloat(fields[7]);
+			let coal = parseFloat(fields[8]);
+			let uranium = parseFloat(fields[9]);
 			frame.units.push({type, team, id, x, y, cd, wood, coal, uranium});
 		}
 
 		if (fields[0] === "c") {
-			let team = parseInt(fields[1], 10);
+			let team = parseFloat(fields[1]);
 			let id = fields[2];
-			let fuel = parseInt(fields[3], 10);
-			let upkeep = parseInt(fields[4], 10);
+			let fuel = parseFloat(fields[3]);
+			let upkeep = parseFloat(fields[4]);
 			frame.cities.push({team, id, fuel, upkeep});
 		}
 
 		if (fields[0] === "ct") {
-			let team = parseInt(fields[1], 10);
+			let team = parseFloat(fields[1]);
 			let id = fields[2];
-			let x = parseInt(fields[3], 10);
-			let y = parseInt(fields[4], 10);
-			let cd = parseInt(fields[5], 10);
+			let x = parseFloat(fields[3]);
+			let y = parseFloat(fields[4]);
+			let cd = parseFloat(fields[5]);
 			frame.houses.push({team, id, x, y, cd});
 		}
 
 		if (fields[0] === "ccd") {
-			let x = parseInt(fields[1], 10);
-			let y = parseInt(fields[2], 10);
+			let x = parseFloat(fields[1]);
+			let y = parseFloat(fields[2]);
 			let road = parseFloat(fields[3]);
 			frame.map[x][y].road = road;
 		}
