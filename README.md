@@ -2,6 +2,6 @@
 
 (Work in progress...)
 
-* Requires the replay to exist in the "stateful" format.
+* Requires the replay to exist in either the stateful or the Kaggle format.
 * Requires electron (e.g. try `npm install -g electron`)
 * Then do `electron .` in the Optics directory.
