@@ -139,7 +139,7 @@ function draw_info(replay, index, infodiv, selection) {
 
 	lines.push(`<br>Turn ${index + (config.turns_start_at_one ? 1 : 0)} ${is_night(index) ? "(night)" : "(day)"}<br>`);
 
-	lines.push(`Seed: ${replay.seed}<br>`);
+	lines.push(`Seed: ${replay.seed()}<br>`);
 
 	let rem = replay.get_remaining_resources(index);
 

@@ -5,7 +5,7 @@ const path = require("path");
 const {ipcRenderer} = require("electron");
 
 const {defaults_classified} = require("./config_io");
-const add_replay_methods = require("./replay");
+const fixed_stateful_replay = require("./replay");
 const drawtools = require("./draw");
 
 exports.new_hub = function() {
@@ -79,13 +79,12 @@ let hub_props = {
 		}
 
 		ipcRenderer.send("set_title", path.basename(filepath));
-		this.replay = o;
+
 		this.index = 0;
 		this.selection = null;
-		add_replay_methods(this.replay);
+		this.replay = fixed_stateful_replay(o);
 
 		this.draw();
-
 	},
 
 	draw() {
@@ -128,8 +127,8 @@ let hub_props = {
 	forward(n) {
 		this.index += n;
 		if (this.replay) {
-			if (this.index >= this.replay.stateful.length) {
-				this.index = this.replay.stateful.length - 1;
+			if (this.index >= this.replay.length()) {
+				this.index = this.replay.length() - 1;
 				this.stop_autoplay();
 			}
 		} else {

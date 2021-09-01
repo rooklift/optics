@@ -2,8 +2,10 @@
 
 const utils = require("./utils");
 
-function add_replay_methods(o) {
-	Object.assign(o, replay_props);
+function fixed_stateful_replay(raw_replay) {
+	let ret = {r: raw_replay};
+	Object.assign(ret, replay_props);
+	return ret;
 }
 
 let replay_props = {
@@ -11,17 +13,25 @@ let replay_props = {
 	// Note all of our "get" methods return completely new objects and so
 	// should never be identity-compared with each other.
 
+	seed() {
+		return this.r.seed;
+	},
+
 	width() {
-		return this.stateful[0].map[0].length;
+		return this.r.stateful[0].map[0].length;
 	},
 
 	height() {
-		return this.stateful[0].map.length;
+		return this.r.stateful[0].map.length;
+	},
+
+	length() {
+		return this.r.stateful.length;
 	},
 
 	get_cell(i, x, y) {
 
-		let cell = this.stateful[i].map[y][x];
+		let cell = this.r.stateful[i].map[y][x];
 
 		let ret = {
 			x: x,
@@ -38,13 +48,13 @@ let replay_props = {
 
 		let ret = [];
 
-		for (let team_string of Object.keys(this.stateful[i].teamStates)) {
+		for (let team_string of Object.keys(this.r.stateful[i].teamStates)) {
 
 			let team = parseInt(team_string, 10);
 
-			for (let unit_id of Object.keys(this.stateful[i].teamStates[team_string].units)) {
+			for (let unit_id of Object.keys(this.r.stateful[i].teamStates[team_string].units)) {
 
-				let unit = this.stateful[i].teamStates[team_string].units[unit_id];
+				let unit = this.r.stateful[i].teamStates[team_string].units[unit_id];
 
 				ret.push({
 					type: unit.type,
@@ -65,7 +75,7 @@ let replay_props = {
 
 	get_houses(i) {
 		let ret = [];
-		for (let city of Object.values(this.stateful[i].cities)) {
+		for (let city of Object.values(this.r.stateful[i].cities)) {
 			for (let house of city.cityCells) {
 				ret.push({
 					team: city.team,
@@ -81,7 +91,7 @@ let replay_props = {
 
 	get_cities(i) {
 		let ret = [];
-		for (let city of Object.values(this.stateful[i].cities)) {
+		for (let city of Object.values(this.r.stateful[i].cities)) {
 			ret.push({
 				team: city.team,
 				id: city.id,
@@ -106,16 +116,16 @@ let replay_props = {
 	},
 
 	get_research(i, team) {
-		return this.stateful[i].teamStates[team].researchPoints;
+		return this.r.stateful[i].teamStates[team].researchPoints;
 	},
 
 	get_team_ids() {
-		return Object.keys(this.stateful[0].teamStates).map(t => parseInt(t, 10));
+		return Object.keys(this.r.stateful[0].teamStates).map(t => parseInt(t, 10));
 	},
 
 	get_bot_name(team) {
 		try {
-			let fullpath = this.teamDetails[team].name;
+			let fullpath = this.r.teamDetails[team].name;
 			fullpath = utils.replace_all(fullpath, "\\", "/");
 			if (!fullpath.includes("/")) {
 				return fullpath;
@@ -132,7 +142,7 @@ let replay_props = {
 	},
 
 	get_orders_for_unit(i, id) {
-		let list = this.allCommands[i];
+		let list = this.r.allCommands[i];
 		if (list === undefined) {
 			return "";
 		}
@@ -141,7 +151,7 @@ let replay_props = {
 	},
 
 	get_direction_for_unit(i, id) {
-		let list = this.allCommands[i];
+		let list = this.r.allCommands[i];
 		if (list === undefined) {
 			return "";
 		}
@@ -156,7 +166,7 @@ let replay_props = {
 	},
 
 	get_orders_for_house(i, x, y) {
-		let list = this.allCommands[i];
+		let list = this.r.allCommands[i];
 		if (list === undefined) {
 			return "";
 		}
@@ -204,4 +214,4 @@ function command_is_for_house(s, x, y) {	// given some command, is it for the ho
 
 
 
-module.exports = add_replay_methods;
+module.exports = fixed_stateful_replay;
