@@ -72,7 +72,7 @@ function draw(replay, index, canvas, infodiv, selection) {
 		ctx.fillStyle = colours[house.team];
 
 		ctx.beginPath();
-		ctx.moveTo(house.x * cell_size + cell_size / 2, house.y * cell_size + 2)
+		ctx.moveTo(house.x * cell_size + cell_size / 2, house.y * cell_size + 2);
 		ctx.lineTo(house.x * cell_size + cell_size - 2, house.y * cell_size + cell_size / 3);
 		ctx.lineTo(house.x * cell_size + cell_size - 2, house.y * cell_size + cell_size - 2);
 		ctx.lineTo(house.x * cell_size + 2, house.y * cell_size + cell_size - 2);
@@ -467,7 +467,7 @@ function draw_selection_crosshairs(replay, index, canvas, selection, cell_size) 
 	ctx.stroke();
 
 	ctx.setLineDash([]);
-};
+}
 
 
 
