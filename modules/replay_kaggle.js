@@ -118,15 +118,15 @@ let kaggle_replay_props = {
 	},
 
 	get_house_at(i, x, y) {
-		return this.get_houses(i).filter(h => h.x === x && h.y === y)[0];
+		return this.get_houses(i).find(h => h.x === x && h.y === y);
 	},
 
 	get_unit_by_id(i, id) {
-		return this.get_units(i).filter(u => u.id === id)[0];
+		return this.get_units(i).find(u => u.id === id);
 	},
 
 	get_city_by_id(i, id) {
-		return this.get_cities(i).filter(u => u.id === id)[0];
+		return this.get_cities(i).find(c => c.id === id);
 	},
 };
 
