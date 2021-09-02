@@ -25,7 +25,6 @@ exports.defaults = {
 	"unit_triangles": true,
 	"condensed_city_info": true,
 	"info_font_size": 22,
-	"turns_start_at_one": false,
 };
 
 // ------------------------------------------------------------------------------------------------

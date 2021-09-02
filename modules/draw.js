@@ -137,7 +137,7 @@ function draw_info(replay, index, infodiv, selection) {
 
 	let lines = [];
 
-	lines.push(`<br>Turn ${index + (config.turns_start_at_one ? 1 : 0)} ${is_night(index) ? "(night)" : "(day)"}<br>`);
+	lines.push(`<br>Turn ${index} ${is_night(index) ? "(night)" : "(day)"}<br>`);
 
 	lines.push(`v${replay.version()}, seed: ${replay.seed()}<br>`);
 
