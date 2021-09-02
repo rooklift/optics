@@ -1,24 +1,16 @@
 "use strict";
 
-const {command_is_for_unit, command_is_for_house, make_frame} = require("./replay_utils");
+const utils = require("./utils");
 
 
 function fixed_kaggle_replay(raw_replay) {
-
-	let ret = {
-		r: raw_replay,
-		frames: []
-	};
-
+	let ret = {r: raw_replay, frames: []};
 	Object.assign(ret, kaggle_replay_props);
-
 	for (let step of ret.r.steps) {
 		ret.frames.push(make_frame(ret.width(), ret.height(), step[0].observation.updates));
 	}
-
 	return ret;
 }
-
 
 let kaggle_replay_props = {
 
@@ -95,13 +87,13 @@ let kaggle_replay_props = {
 
 	get_orders_for_unit(i, id) {
 		let list = this.get_all_commands(i);
-		list = list.filter(c => command_is_for_unit(c, id));
+		list = list.filter(c => utils.command_is_for_unit(c, id));
 		return list.join(", ");
 	},
 
 	get_direction_for_unit(i, id) {
 		let list = this.get_all_commands(i);
-		list = list.filter(c => command_is_for_unit(c, id));
+		list = list.filter(c => utils.command_is_for_unit(c, id));
 		if (list.length === 1) {
 			let c = list[0].trim();
 			if (c.startsWith("m ")) {
@@ -113,7 +105,7 @@ let kaggle_replay_props = {
 
 	get_orders_for_house(i, x, y) {
 		let list = this.get_all_commands(i);
-		list = list.filter(c => command_is_for_house(c, x, y));
+		list = list.filter(c => utils.command_is_for_house(c, x, y));
 		return list.join(", ");
 	},
 
@@ -129,6 +121,91 @@ let kaggle_replay_props = {
 		return this.get_units(i).filter(u => u.id === id)[0];
 	},
 };
+
+// ------------------------------------------------------------------------------------------------
+
+function make_frame(width, height, updates) {
+
+	let frame = {};
+
+	frame.map = [];
+	frame.rp = [0, 0];
+	frame.units = [];
+	frame.houses = [];
+	frame.cities = [];
+
+	for (let x = 0; x < width; x++) {
+		frame.map.push([]);
+		for (let y = 0; y < height; y++) {
+			frame.map[x].push({
+				x: x,
+				y: y,
+				type: "",
+				amount: 0,
+				road: 0
+			});
+		}
+	}
+
+	for (let line of updates) {
+
+		let fields = line.split(" ").filter(z => z !== "");
+
+		if (fields[0] === "rp") {
+			let team = parseFloat(fields[1]);
+			let points = parseFloat(fields[2]);
+			frame.rp[team] = points;
+		}
+
+		if (fields[0] === "r") {
+			let type = fields[1];
+			let x = parseFloat(fields[2]);
+			let y = parseFloat(fields[3]);
+			let amount = parseFloat(fields[4]);
+			frame.map[x][y].type = amount > 0 ? type : "";
+			frame.map[x][y].amount = amount;
+		}
+
+		if (fields[0] === "u") {
+			let type = parseFloat(fields[1]);
+			let team = parseFloat(fields[2]);
+			let id = fields[3];
+			let x = parseFloat(fields[4]);
+			let y = parseFloat(fields[5]);
+			let cd = parseFloat(fields[6]);
+			let wood = parseFloat(fields[7]);
+			let coal = parseFloat(fields[8]);
+			let uranium = parseFloat(fields[9]);
+			frame.units.push({type, team, id, x, y, cd, wood, coal, uranium});
+		}
+
+		if (fields[0] === "c") {
+			let team = parseFloat(fields[1]);
+			let id = fields[2];
+			let fuel = parseFloat(fields[3]);
+			let upkeep = parseFloat(fields[4]);
+			frame.cities.push({team, id, fuel, upkeep});
+		}
+
+		if (fields[0] === "ct") {
+			let team = parseFloat(fields[1]);
+			let id = fields[2];
+			let x = parseFloat(fields[3]);
+			let y = parseFloat(fields[4]);
+			let cd = parseFloat(fields[5]);
+			frame.houses.push({team, id, x, y, cd});
+		}
+
+		if (fields[0] === "ccd") {
+			let x = parseFloat(fields[1]);
+			let y = parseFloat(fields[2]);
+			let road = parseFloat(fields[3]);
+			frame.map[x][y].road = road;
+		}
+	}
+
+	return frame;
+}
 
 // ------------------------------------------------------------------------------------------------
 
