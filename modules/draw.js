@@ -222,9 +222,15 @@ function draw_info(replay, index, infodiv, selection) {
 
 		if (house) {
 
-			cell_line += ` - <span class="team_${house.team}">house (${house.id})</span>,
+			cell_line += ` - <span class="team_${house.team}">house</span>,
 							cd: <span class="team_${house.team}">${house.cd}</span>,
-							cmd: <span class="team_${house.team}">${replay.get_orders_for_house(index, house.x, house.y)}</span>`;
+							cmd: <span class="team_${house.team}">${replay.get_orders_for_house(index, house.x, house.y)}</span><br>`;
+
+			let city = replay.get_city_by_id(index, house.id);
+
+			cell_line += `- city <span class="team_${house.team}">${city.id}</span>,
+							fuel: <span class="team_${house.team}">${city.fuel}</span>,
+							upkeep: <span class="team_${house.team}">${city.upkeep}</span><br>`;
 
 		} else if (cell.type) {
 

@@ -124,6 +124,10 @@ let kaggle_replay_props = {
 	get_unit_by_id(i, id) {
 		return this.get_units(i).filter(u => u.id === id)[0];
 	},
+
+	get_city_by_id(i, id) {
+		return this.get_cities(i).filter(u => u.id === id)[0];
+	},
 };
 
 // ------------------------------------------------------------------------------------------------
