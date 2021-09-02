@@ -261,6 +261,14 @@ function menu_build() {
 					}
 				},
 				{
+					label: "Condensed city info",
+					type: "checkbox",
+					checked: config.condensed_city_info,
+					click: () => {
+						win.webContents.send("toggle", "condensed_city_info");
+					}
+				},
+				{
 					label: "Info font",
 					submenu: [
 						{

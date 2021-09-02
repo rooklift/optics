@@ -15,6 +15,10 @@ let stateful_replay_props = {
 	// Note all of our "get" methods return completely new objects and so
 	// should never be identity-compared with each other.
 
+	version() {
+		return this.r.version;
+	},
+
 	seed() {
 		return this.r.seed;
 	},

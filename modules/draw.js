@@ -139,7 +139,7 @@ function draw_info(replay, index, infodiv, selection) {
 
 	lines.push(`<br>Turn ${index + (config.turns_start_at_one ? 1 : 0)} ${is_night(index) ? "(night)" : "(day)"}<br>`);
 
-	lines.push(`Seed: ${replay.seed()}<br>`);
+	lines.push(`v${replay.version()}, seed: ${replay.seed()}<br>`);
 
 	let rem = replay.get_remaining_resources(index);
 
@@ -162,13 +162,27 @@ function draw_info(replay, index, infodiv, selection) {
 					carts: <span class="team_${team}">${units.filter(u => u.team === team && u.type === 1).length}</span><br>`
 		);
 
-		for (let city of cities.filter(c => c.team === team)) {
-			lines.push(`- city <span class="team_${team}">${city.id}</span>,
-						fuel: <span class="team_${team}">${city.fuel}</span>,
-						upkeep: <span class="team_${team}">${city.upkeep}</span><br>`
-			);
-		}
+		if (config.condensed_city_info) {
 
+			let count = 0;
+			let upkeep = 0;
+
+			for (let city of cities.filter(c => c.team === team)) {
+				count++;
+				upkeep += city.upkeep;
+			}
+
+			lines.push(`cities: <span class="team_${team}">${count}</span>,
+						upkeep: <span class="team_${team}">${upkeep}</span><br>`);
+
+		} else {
+
+			for (let city of cities.filter(c => c.team === team)) {
+				lines.push(`- city <span class="team_${team}">${city.id}</span>,
+							fuel: <span class="team_${team}">${city.fuel}</span>,
+							upkeep: <span class="team_${team}">${city.upkeep}</span><br>`);
+			}
+		}
 	}
 
 	lines.push("<br><br>");
