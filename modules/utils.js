@@ -79,9 +79,13 @@ function annotation_object_from_command(s, team) {
 
 			return {team, type: fields[0], x1, y1, x2, y2};
 
+		case "dt":
+
+			return null;		// NOT IMPLEMENTED / TODO ?
+
 		case "dst":
 
-			return null;		// TODO
+			return {team, type: fields[0], text: s.slice(4)};
 
 		default:
 
@@ -90,7 +94,19 @@ function annotation_object_from_command(s, team) {
 	}
 }
 
+function safe_string_html(s) {
+	if (typeof s !== "string") {
+		return undefined;
+	}
+	s = replace_all(s,  `&`  ,  `&amp;`   );		// This needs to be first of course.
+	s = replace_all(s,  `<`  ,  `&lt;`    );
+	s = replace_all(s,  `>`  ,  `&gt;`    );
+	s = replace_all(s,  `'`  ,  `&apos;`  );
+	s = replace_all(s,  `"`  ,  `&quot;`  );
+	return s;
+}
+
 // ------------------------------------------------------------------------------------------------
 
-module.exports = {stringify, replace_all, command_is_for_unit, command_is_for_house, annotation_object_from_command};
+module.exports = {stringify, replace_all, command_is_for_unit, command_is_for_house, annotation_object_from_command, safe_string_html};
 

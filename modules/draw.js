@@ -3,8 +3,9 @@
 const colours = ["#ffcc66", "#00ccff"];
 const unit_types = ["worker", "cart"];
 const road_colours = ["#222222", "#333333", "#444444", "#555555", "#666666", "#777777", "#777777"];
-
 const ann_colours = ["#ff6666", "#0066ff"];
+
+const utils = require("./utils");
 
 function draw(replay, index, canvas, infodiv, selection) {
 
@@ -122,6 +123,8 @@ function draw(replay, index, canvas, infodiv, selection) {
 
 	let annotations = replay.get_annotations(index);
 
+	let sidetexts = [];
+
 	for (let ann of annotations) {
 		if (ann.type === "dc") {
 			draw_annotation_circle(canvas, ann.x1, ann.y1, cell_size, ann_colours[ann.team]);
@@ -132,11 +135,14 @@ function draw(replay, index, canvas, infodiv, selection) {
 		if (ann.type === "dl") {
 			draw_annotation_line(canvas, ann.x1, ann.y1, ann.x2, ann.y2, cell_size, ann_colours[ann.team]);
 		}
+		if (ann.type === "dst") {
+			sidetexts.push(ann);
+		}
 	}
 
 	// Info...
 
-	draw_info(replay, index, infodiv, selection);
+	draw_info(replay, index, infodiv, selection, sidetexts);
 }
 
 function calculate_cell_size(canvas, map_width, map_height) {
@@ -147,7 +153,7 @@ function calculate_cell_size(canvas, map_width, map_height) {
 	return Math.floor(Math.min(foo, bar));
 }
 
-function draw_info(replay, index, infodiv, selection) {
+function draw_info(replay, index, infodiv, selection, sidetexts) {
 
 	let cities = replay.get_cities(index);
 	let units = replay.get_units(index);
@@ -165,6 +171,17 @@ function draw_info(replay, index, infodiv, selection) {
 				<span class="coal">${rem.coal}</span>,
 				<span class="uranium">${rem.uranium}</span><br>`
 	);
+
+	if (config.sidetexts) {			// Early termination...
+
+		for (let item of sidetexts) {
+			let s = utils.safe_string_html(item.text);
+			lines.push(`<br><span class="team_${item.team}">${s}</span>`);
+		}
+
+		infodiv.innerHTML = lines.join("\n");
+		return;
+	}
 
 	// Teams.......................................................................................
 

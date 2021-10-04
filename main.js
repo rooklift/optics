@@ -261,6 +261,15 @@ function menu_build() {
 					}
 				},
 				{
+					label: "Draw debug sidetexts",
+					accelerator: "CommandOrControl+D",
+					type: "checkbox",
+					checked: config.sidetexts,
+					click: () => {
+						win.webContents.send("toggle", "sidetexts");
+					}
+				},
+				{
 					label: "Info font",
 					submenu: [
 						{

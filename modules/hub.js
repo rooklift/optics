@@ -37,6 +37,7 @@ let hub_props = {
 		case "unit_triangles":
 		case "info_font_size":
 		case "condensed_city_info":
+		case "sidetexts":
 			this.draw();
 			break;
 		}
