@@ -128,6 +128,10 @@ let kaggle_replay_props = {
 	get_city_by_id(i, id) {
 		return this.get_cities(i).find(c => c.id === id);
 	},
+
+	get_annotations(i) {
+		return [];				// Not implemented.
+	}
 };
 
 // ------------------------------------------------------------------------------------------------

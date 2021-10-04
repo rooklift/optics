@@ -4,6 +4,8 @@ const colours = ["#ffcc66", "#00ccff"];
 const unit_types = ["worker", "cart"];
 const road_colours = ["#222222", "#333333", "#444444", "#555555", "#666666", "#777777", "#777777"];
 
+const ann_colours = ["#ff6666", "#0066ff"];
+
 function draw(replay, index, canvas, infodiv, selection) {
 
 	canvas.height = window.innerHeight;
@@ -113,6 +115,22 @@ function draw(replay, index, canvas, infodiv, selection) {
 			}
 		} else {
 			draw_stack(canvas, cell_size, stack);
+		}
+	}
+
+	// Annotations...
+
+	let annotations = replay.get_annotations(index);
+
+	for (let ann of annotations) {
+		if (ann.type === "dc") {
+			draw_annotation_circle(canvas, ann.x1, ann.y1, cell_size, ann_colours[ann.team]);
+		}
+		if (ann.type === "dx") {
+			draw_annotation_cross(canvas, ann.x1, ann.y1, cell_size, ann_colours[ann.team]);
+		}
+		if (ann.type === "dl") {
+			draw_annotation_line(canvas, ann.x1, ann.y1, ann.x2, ann.y2, cell_size, ann_colours[ann.team]);
 		}
 	}
 
@@ -426,6 +444,62 @@ function draw_triangle(canvas, x, y, direction, cell_size, colour) {
 		break;
 
 	}
+}
+
+function draw_annotation_circle(canvas, x, y, cell_size, colour) {
+
+	let ctx = canvas.getContext("2d");
+	ctx.strokeStyle = colour;
+	ctx.lineWidth = 2;
+
+	let gx = x * cell_size + (cell_size / 2);
+	let gy = y * cell_size + (cell_size / 2);
+
+	ctx.beginPath();
+	ctx.arc(gx, gy, cell_size / 2 - 1, 0, 2 * Math.PI);
+	ctx.stroke();
+}
+
+function draw_annotation_cross(canvas, x, y, cell_size, colour) {
+
+	let ctx = canvas.getContext("2d");
+	ctx.strokeStyle = colour;
+	ctx.lineWidth = 2;
+
+	let gx1 = x * cell_size;
+	let gy1 = y * cell_size;
+	let gx2 = x * cell_size + cell_size;
+	let gy2 = y * cell_size + cell_size;
+
+	ctx.beginPath();
+	ctx.moveTo(gx1, gy1);
+	ctx.lineTo(gx2, gy2);
+	ctx.closePath();
+	ctx.stroke();
+
+	ctx.beginPath();
+	ctx.moveTo(gx2, gy1);
+	ctx.lineTo(gx1, gy2);
+	ctx.closePath();
+	ctx.stroke();
+}
+
+function draw_annotation_line(canvas, x1, y1, x2, y2, cell_size, colour) {
+
+	let ctx = canvas.getContext("2d");
+	ctx.strokeStyle = colour;
+	ctx.lineWidth = 2;
+
+	let gx1 = x1 * cell_size + (cell_size / 2);
+	let gy1 = y1 * cell_size + (cell_size / 2);
+	let gx2 = x2 * cell_size + (cell_size / 2);
+	let gy2 = y2 * cell_size + (cell_size / 2);
+
+	ctx.beginPath();
+	ctx.moveTo(gx1, gy1);
+	ctx.lineTo(gx2, gy2);
+	ctx.closePath();
+	ctx.stroke();
 }
 
 function draw_selection_crosshairs(replay, index, canvas, selection, cell_size) {

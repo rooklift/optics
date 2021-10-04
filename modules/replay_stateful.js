@@ -194,6 +194,24 @@ let stateful_replay_props = {
 	get_city_by_id(i, id) {
 		return this.get_cities(i).find(c => c.id === id);
 	},
+
+	get_annotations(i) {
+
+		// Returns list of {team, type, text, x1, y1, x2, y2} though not all fields are always used.
+
+		let ret = [];
+		let raw_list = this.r.allCommands[i];
+		if (raw_list === undefined) {
+			return ret;
+		}
+		for (let item of raw_list) {
+			let annotation = utils.annotation_object_from_command(item.command, item.agentID);
+			if (annotation) {
+				ret.push(annotation);
+			}
+		}
+		return ret;
+	},
 };
 
 // ------------------------------------------------------------------------------------------------
