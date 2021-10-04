@@ -174,6 +174,8 @@ function draw_info(replay, index, infodiv, selection, sidetexts) {
 
 	if (config.sidetexts) {			// Early termination...
 
+		lines.push(`<br>Debug sidetexts (ctrl-D):<br>`);
+
 		for (let item of sidetexts) {
 			let s = utils.safe_string_html(item.text);
 			lines.push(`<br><span class="team_${item.team}">${s}</span>`);
