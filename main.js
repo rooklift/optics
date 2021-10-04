@@ -81,6 +81,32 @@ function startup() {
 		win.setTitle(msg);
 	});
 
+	electron.ipcMain.once("renderer_ready", () => {
+
+		// Open a file via command line. We must wait until the renderer has properly loaded before we do this.
+		// While it might seem like we could do this after "ready-to-show" I'm not 100% sure that the renderer
+		// will have fully loaded when that fires.
+
+		let filename = "";
+
+		if (path.basename(process.argv[0]).toLowerCase().includes("electron")) {
+			if (process.argv.length > 2) {
+				filename = process.argv[process.argv.length - 1];
+			}
+		} else {
+			if (process.argv.length > 1) {
+				filename = process.argv[process.argv.length - 1];
+			}
+		}
+
+		if (filename !== "") {
+			win.webContents.send("call", {
+				fn: "load_stateful_replay",
+				args: [filename]
+			});
+		}
+	});
+
 	electron.Menu.setApplicationMenu(menu);
 	menu_is_set = true;
 

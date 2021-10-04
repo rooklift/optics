@@ -92,3 +92,7 @@ document.getElementById("canvas").addEventListener("mousedown", (event) => {
 	event.preventDefault();
 	hub.click(event);
 });
+
+
+
+ipcRenderer.send("renderer_ready", null);
