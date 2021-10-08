@@ -202,14 +202,17 @@ function draw_info(replay, index, infodiv, selection, sidetexts) {
 		if (config.condensed_city_info) {
 
 			let count = 0;
+			let fuel = 0;
 			let upkeep = 0;
 
 			for (let city of cities.filter(c => c.team === team)) {
 				count++;
+				fuel += city.fuel;
 				upkeep += city.upkeep;
 			}
 
 			lines.push(`cities: <span class="team_${team}">${count}</span>,
+						city fuel: <span class="team_${team}">${fuel}</span>,
 						upkeep: <span class="team_${team}">${upkeep}</span><br>`);
 
 		} else {
