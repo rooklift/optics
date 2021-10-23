@@ -1,5 +1,6 @@
 "use strict";
 
+const types = require("./types");
 const utils = require("./utils");
 
 
@@ -37,6 +38,9 @@ let kaggle_replay_props = {
 		return this.r.steps.length;
 	},
 
+	// Object.assign() is used in the following methods
+	// to create completely new objects each time.
+
 	get_cell(i, x, y) {
 		return Object.assign({}, this.frames[i].map[x][y]);
 	},
@@ -54,7 +58,7 @@ let kaggle_replay_props = {
 	},
 
 	get_remaining_resources(i) {
-		let ret = {wood: 0, coal: 0, uranium: 0};
+		let ret = types.new_resource_counter();
 		for (let x = 0; x < this.width(); x++) {
 			for (let y = 0; y < this.height(); y++) {
 				let cell = this.get_cell(i, x, y);
@@ -149,13 +153,7 @@ function make_frame(width, height, updates) {
 	for (let x = 0; x < width; x++) {
 		frame.map.push([]);
 		for (let y = 0; y < height; y++) {
-			frame.map[x].push({
-				x: x,
-				y: y,
-				type: "",
-				amount: 0,
-				road: 0
-			});
+			frame.map[x].push(types.new_cell(x, y, "", 0, 0));
 		}
 	}
 
@@ -163,13 +161,13 @@ function make_frame(width, height, updates) {
 
 		let fields = line.split(" ").filter(z => z !== "");
 
-		if (fields[0] === "rp") {
+		if (fields[0] === "rp") {				// RESEARCH POINTS
 			let team = parseFloat(fields[1]);
 			let points = parseFloat(fields[2]);
 			frame.rp[team] = points;
 		}
 
-		if (fields[0] === "r") {
+		if (fields[0] === "r") {				// CELL - TYPE & AMOUNT
 			let type = fields[1];
 			let x = parseFloat(fields[2]);
 			let y = parseFloat(fields[3]);
@@ -178,41 +176,44 @@ function make_frame(width, height, updates) {
 			frame.map[x][y].amount = amount;
 		}
 
-		if (fields[0] === "u") {
-			let type = parseFloat(fields[1]);
-			let team = parseFloat(fields[2]);
-			let id = fields[3];
-			let x = parseFloat(fields[4]);
-			let y = parseFloat(fields[5]);
-			let cd = parseFloat(fields[6]);
-			let wood = parseFloat(fields[7]);
-			let coal = parseFloat(fields[8]);
-			let uranium = parseFloat(fields[9]);
-			frame.units.push({type, team, id, x, y, cd, wood, coal, uranium});
-		}
-
-		if (fields[0] === "c") {
-			let team = parseFloat(fields[1]);
-			let id = fields[2];
-			let fuel = parseFloat(fields[3]);
-			let upkeep = parseFloat(fields[4]);
-			frame.cities.push({team, id, fuel, upkeep});
-		}
-
-		if (fields[0] === "ct") {
-			let team = parseFloat(fields[1]);
-			let id = fields[2];
-			let x = parseFloat(fields[3]);
-			let y = parseFloat(fields[4]);
-			let cd = parseFloat(fields[5]);
-			frame.houses.push({team, id, x, y, cd});
-		}
-
-		if (fields[0] === "ccd") {
+		if (fields[0] === "ccd") {				// CELL - ROAD
 			let x = parseFloat(fields[1]);
 			let y = parseFloat(fields[2]);
 			let road = parseFloat(fields[3]);
 			frame.map[x][y].road = road;
+		}
+
+		if (fields[0] === "u") {				// UNIT
+			frame.units.push(types.new_unit(
+				parseFloat(fields[1]),			// type
+				parseFloat(fields[2]),			// team
+				fields[3],						// id
+				parseFloat(fields[4]),			// x
+				parseFloat(fields[5]),			// y
+				parseFloat(fields[6]),			// cd
+				parseFloat(fields[7]),			// wood
+				parseFloat(fields[8]),			// coal
+				parseFloat(fields[9]),			// uranium
+			));
+		}
+
+		if (fields[0] === "ct") {				// HOUSE
+			frame.houses.push(types.new_house(
+				parseFloat(fields[1]),			// team
+				fields[2],						// id
+				parseFloat(fields[3]),			// x
+				parseFloat(fields[4]),			// y
+				parseFloat(fields[5]),			// cd
+			));
+		}
+
+		if (fields[0] === "c") {				// CITY
+			frame.cities.push(types.new_city(
+				parseFloat(fields[1]),			// team
+				fields[2],						// id
+				parseFloat(fields[3]),			// fuel
+				parseFloat(fields[4]),			// upkeep
+			));
 		}
 	}
 

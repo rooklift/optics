@@ -1,5 +1,6 @@
 "use strict";
 
+const types = require("./types");
 const utils = require("./utils");
 
 
@@ -37,17 +38,15 @@ let stateful_replay_props = {
 
 	get_cell(i, x, y) {
 
-		let cell = this.r.stateful[i].map[y][x];
+		let raw_cell = this.r.stateful[i].map[y][x];
 
-		let ret = {
-			x: x,
-			y: y,
-			type: (cell.resource && cell.resource.amount > 0) ? cell.resource.type : "",
-			amount: (cell.resource && cell.resource.amount > 0) ? cell.resource.amount : 0,
-			road: cell.road ? cell.road : 0,
-		};
-
-		return ret;
+		return types.new_cell(
+			x,
+			y,
+			(raw_cell.resource && raw_cell.resource.amount > 0) ? raw_cell.resource.type : "",
+			(raw_cell.resource && raw_cell.resource.amount > 0) ? raw_cell.resource.amount : 0,
+			raw_cell.road ? raw_cell.road : 0,
+		);
 	},
 
 	get_units(i) {
@@ -60,19 +59,19 @@ let stateful_replay_props = {
 
 			for (let unit_id of Object.keys(this.r.stateful[i].teamStates[team_string].units)) {
 
-				let unit = this.r.stateful[i].teamStates[team_string].units[unit_id];
+				let raw_unit = this.r.stateful[i].teamStates[team_string].units[unit_id];
 
-				ret.push({
-					type: unit.type,
-					team: team,
-					id: unit_id,
-					x: unit.x,
-					y: unit.y,
-					cd: unit.cooldown,
-					wood: unit.cargo.wood,
-					coal: unit.cargo.coal,
-					uranium: unit.cargo.uranium,
-				});
+				ret.push(types.new_unit(
+					raw_unit.type,
+					team,
+					unit_id,
+					raw_unit.x,
+					raw_unit.y,
+					raw_unit.cooldown,
+					raw_unit.cargo.wood,
+					raw_unit.cargo.coal,
+					raw_unit.cargo.uranium,
+				));
 			}
 		}
 
@@ -81,15 +80,15 @@ let stateful_replay_props = {
 
 	get_houses(i) {
 		let ret = [];
-		for (let city of Object.values(this.r.stateful[i].cities)) {
-			for (let house of city.cityCells) {
-				ret.push({
-					team: city.team,
-					id: city.id,
-					x: house.x,
-					y: house.y,
-					cd: house.cooldown,
-				});
+		for (let raw_city of Object.values(this.r.stateful[i].cities)) {
+			for (let raw_house of raw_city.cityCells) {
+				ret.push(types.new_house(
+					raw_city.team,
+					raw_city.id,
+					raw_house.x,
+					raw_house.y,
+					raw_house.cooldown,
+				));
 			}
 		}
 		return ret;
@@ -97,19 +96,19 @@ let stateful_replay_props = {
 
 	get_cities(i) {
 		let ret = [];
-		for (let city of Object.values(this.r.stateful[i].cities)) {
-			ret.push({
-				team: city.team,
-				id: city.id,
-				fuel: city.fuel,
-				upkeep: city.lightupkeep,
-			});
+		for (let raw_city of Object.values(this.r.stateful[i].cities)) {
+			ret.push(types.new_city(
+				raw_city.team,
+				raw_city.id,
+				raw_city.fuel,
+				raw_city.lightupkeep,
+			));
 		}
 		return ret;
 	},
 
 	get_remaining_resources(i) {
-		let ret = {wood: 0, coal: 0, uranium: 0};
+		let ret = types.new_resource_counter();
 		for (let x = 0; x < this.width(); x++) {
 			for (let y = 0; y < this.height(); y++) {
 				let cell = this.get_cell(i, x, y);
