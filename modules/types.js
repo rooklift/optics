@@ -28,3 +28,6 @@ exports.new_resource_counter = function() {
 	return {wood: 0, coal: 0, uranium: 0};
 };
 
+exports.new_annotation = function(team, type, text, x1, y1, x2, y2) {
+	return {team, type, text, x1, y1, x2, y2};
+};

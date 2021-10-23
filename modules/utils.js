@@ -1,5 +1,7 @@
 "use strict";
 
+const types = require("./types");
+
 function stringify(msg) {							// Given anything, create a string from it.
 	try {
 		if (msg instanceof Error) {
@@ -50,9 +52,16 @@ function annotation_object_from_command(s, team) {
 
 	let fields = s.trim().split(" ").filter(z => z !== "");			// Note that this might break some debug string; we handle those specially though.
 
-	let x1, y1, x2, y2;
+	let ok = true;
+	
+	let type = fields[0];
+	let text = "";
+	let x1 = null;
+	let y1 = null;
+	let x2 = null;
+	let y2 = null;
 
-	switch (fields[0]) {
+	switch (type) {
 
 		case "dc":
 		case "dx":
@@ -61,10 +70,10 @@ function annotation_object_from_command(s, team) {
 			y1 = parseInt(fields[2], 10);
 
 			if (Number.isNaN(x1) || Number.isNaN(y1)) {
-				return null;
+				ok = false;
 			}
 
-			return {team, type: fields[0], x1, y1};
+			break;
 
 		case "dl":
 
@@ -74,23 +83,28 @@ function annotation_object_from_command(s, team) {
 			y2 = parseInt(fields[4], 10);
 
 			if (Number.isNaN(x1) || Number.isNaN(y1) || Number.isNaN(x2) || Number.isNaN(y2)) {
-				return null;
+				ok = false;
 			}
 
-			return {team, type: fields[0], x1, y1, x2, y2};
-
-		case "dt":
-
-			return null;		// NOT IMPLEMENTED / TODO ?
+			break;
 
 		case "dst":
 
-			return {team, type: fields[0], text: s.slice(4)};
+			text = s.slice(4);
+			break;
 
+		case "dt":				// NOT IMPLEMENTED / TODO ?
 		default:
 
-			return null;
+			ok = false;
+			break;
 
+	}
+
+	if (ok) {
+		return types.new_annotation(team, type, text, x1, y1, x2, y2);
+	} else {
+		return null;
 	}
 }
 
