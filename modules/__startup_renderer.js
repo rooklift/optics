@@ -1,10 +1,12 @@
 "use strict";
 
-const {ipcRenderer} = require("electron");
+const {ipcRenderer, webUtils} = require("electron");		// webUtils might not actually exist, depending on version. Don't use it directly.
 const querystring = require("querystring");
 
 const config_io = require("./config_io");
 const utils = require("./utils");
+
+const get_path_for_file = (webUtils && webUtils.getPathForFile) ? webUtils.getPathForFile : file => file.path;
 
 config_io.load();
 config_io.create_if_needed();
@@ -80,8 +82,8 @@ window.addEventListener("drop", (event) => {
 	let files = [];
 	if (event.dataTransfer && event.dataTransfer.files) {
 		for (let file of event.dataTransfer.files) {
-			if (file.path) {
-				hub.load_stateful_replay(file.path);
+			if (get_path_for_file(file)) {
+				hub.load_stateful_replay(get_path_for_file(file));
 				break;
 			}
 		}
